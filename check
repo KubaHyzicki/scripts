@@ -1,0 +1,56 @@
+#!/usr/bin/sh/bash env
+
+touch ~/NetHis
+touch ~/NetError
+if [[ `cat ~/NetHis` == "" ]]
+then	
+	echo "Working" >> ~/NetHis
+fi
+
+Check () {
+	lastStatus=`tail -1 ~/NetHis`
+   
+   
+#    	{ 
+#    		status="Crushed"
+#    		ping www.google.com -c 1
+#		status="Working"
+#        	echo "PingWorking"
+#	} || true
+	  
+	ping www.google.com -c 1 &> NetError
+	if [[ `cat NetError | grep 'unknown host'` != "" ]]
+	then
+		status="Crushed"
+		echo $status
+	else
+		status="Working"
+		echo $status
+	fi
+
+
+
+	if [[ status == "Working" ]]
+   	then
+    		if [[ $lastStatus == "Crushed" ]]
+      		then
+									echo "Crushed->Working"
+        		sed 's/Crushed//' -i ~/NetHis
+            		echo "Crush ended at `date`" >> ~/NetHis
+            		echo "Working" >> ~/NetHis
+        	fi
+   	elif [[ $lastStatus == "Working" ]]
+   	then
+									echo "Working->Crushed"
+        		sed 's/Working//' -i ~/NetHis
+        		echo "Crush started at `date`" >> ~/NetHis
+        		echo "Crushed" >> ~/NetHis
+    	fi
+}
+
+for i in `seq 6`
+do
+	echo $i
+	Check
+    #sleep 10
+done

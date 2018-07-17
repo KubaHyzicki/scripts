@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+
+if [[ `pwd` == "/home/`whoami`" ]]
+then
+    echo "Warning: Running this script in home/user directory may cause problems"
+    exit 1
+fi
+
+#Variables
+
+patch=`pwd`
+dirPatch=`pwd`
+name="sorter"
+mode="base"
+day=`date | cut -d ' ' -f 2`
+month=`date | cut -d ' ' -f 3`
+year=`date | cut -d ' ' -f 4 | cut -c1-4`
+hour=`date | cut -d ' ' -f 5`
+
+#Inner functions
+
+    #Side functions
+
+    #Modes
+sorterBase () {
+    for x in `ls | grep '..*'`
+    do
+        folderName=$name
+        if [ -d $x ]
+        then            #folders are treated diffrently by ls -l "name"
+            folderName+=`ls -ldc $x | sed -e "s/  */ /g" | cut -d ' ' -f 6-7 | sed -e "s/ //g"`
+        else
+            folderName+=`ls -l $x | sed -e "s/  */ /g" | cut -d ' ' -f 6-7 | sed -e "s/ //g"`
+        fi
+        mkdir -p $folderName
+        if [[ ${x} == 'sorter.*' ]]
+        then
+            continue
+        fi
+        mv $x $folderName
+    done
+    return 0
+}
+sorterTests (){
+
+    return 0
+}
+
+#Main function
+
+sorter  () {
+    if [ -z "$1" ]
+    then
+        printf "
+WARNING-Do not use in main dir!!! (lot of work after messing up)
+parameters:
+-b base(sort by days)
+-n folder names
+-p path
+-h/d/m/y date specified/range(format similar to \`date\`)\n
+	"
+        return 0;
+    fi
+
+    #parameters reading
+
+    i=1
+    for x in $@
+    do
+        var=`echo $@ | cut -d ' ' -f $(( i+1 ))`
+        var2=`echo $@ | cut -d ' ' -f $(( i+2 ))`
+        ((i+=1))
+        if [[ ${x} == "-n" ]]
+        then
+            name=$var
+            continue
+        fi
+        if [[ ${x} == "-p" ]]
+        then
+            path=$var
+            continue
+        fi
+        if [[ "${x}" == "-d" ]]
+        then
+            day=$var
+            if [[ `echo $var2 | cut -c 1`  != "-" ]] && [ ! -z "${var2}" ]
+            then
+                day+="-"$var2
+            fi
+            continue
+        fi
+#tuuu będzie problem, bo pewnie nie da się iterować po miesiącach, a ręcznie to będzie kodochłonne...personal comment(to future update)
+        if [[ "${x}" == "-m" ]]
+        then
+            month=$var
+            if [[ `echo $var2 | cut -c 1`  != "-" ]] && [ ! -z "${var2}" ]
+            then
+                month+="-"$var2
+            fi
+            continue
+        fi
+        if [[ "${x}" == "-y" ]]
+        then
+            year=$var
+            if [[ `echo $var2 | cut -c 1`  != "-" ]] && [ ! -z "${var2}" ]
+            then
+                year+="-"$var2
+            fi
+            continue
+        fi
+        if [[ "${x}" == "-h" ]]
+        then
+            year=$var
+            if [[ `echo $var2 | cut -c 1`  != "-" ]] && [ ! -z "${var2}" ]
+            then
+                year+="-"$var2
+            fi
+            continue
+        fi
+
+	#mode parameters reading
+
+        if [[ "${x}" == "-b" ]]
+        then
+            #added only so that base "sorter" command would work as a help
+            continue
+        fi
+        if [[ "${x}" == "-t" ]]
+        then
+            mode="test"
+            continue
+        fi
+
+    done
+
+#specified mode call
+
+    if [[ ${mode} == "base" ]]
+    then
+        sorterBase
+    elif
+        [[ ${mode} == "test" ]]
+    then
+        echo "ciastko"	#personal comment(to future update)
+    elif true
+    then
+        echo "wrong mode"
+    fi
+
+    return 0
+}
+
+sorter $@

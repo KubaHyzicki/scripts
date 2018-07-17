@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]
+	then
+		printf "parse time(sec)"
+#	elif 
+#				#jakbym się chciał bawić w uruchamianie nie "po czasie", lecz "o godzinie"	
+	else
+		for x in `eval echo {1..$1}` 
+		do				#rozważyć ewentualny podział na h m s
+			clear
+			secs=$(($1-$x))	#Świetne narzędzie! Warto do niego jeszcze wrócić:
+			printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))	
+			#echo $(($1-$x))
+			sleep 1
+		done
+		mplayer ~/Music/All/Alice\ In\ Chains\ -\ Them\ Bones\ \(PCM\ Stereo\).mp4 -ss 3
+fi
+
+

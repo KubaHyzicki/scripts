@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#WARNING!!! Script have to be run as `source scriptName`
+
+#hmm ogólnie nie działa w nim milion rzeczy
+
+baseLoc=$PWD
+\cd $1 2> /dev/null
+#echo $?
+#echo $PWD
+echo "$1"
+if [[ $1 == ".." ]]		#przerzuca cię do ->home->/
+then
+	\cd ..
+elif [[ $1 == "~" ]]		#wywołuje się jako "/home/kuba"
+then
+	echo ciastko
+	\cd ~
+elif [[ -z $1 ]]
+then	
+	echo "no args"
+	if [[ $baseLoc != $PWD ]]; then \cd $OLDPWD; fi
+	folderName=`echo */ | cut -f 1 -d " " | sed -e 's/\///'`
+	\cd ./$folderName	
+elif [[ $? == 1 ]]
+then				#wysypuje się w niezidentyfikowanych przypadkach. Przyjmuje jakieś zaawansowanie dziwne nazwy lokalizacji..
+	echo "search"
+	if [[ $baseLoc != $PWD ]]; then \cd $OLDPWD; fi
+	folderName=`echo */ | grep $1 | sed -e 's/\///' `
+	echo $folderName
+	\cd ./$folderName	
+else
+	echo "coś poszło nie tak"
+fi
+exec

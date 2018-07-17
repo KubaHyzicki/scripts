@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [ 0 == "$#" ]
+then
+	echo "brak argumentów"
+	exit 1
+fi
+
+cmd=""
+
+if [[ "-" == `echo ${1:0:1}` ]]
+then
+	cmd=$2
+else
+	cmd=$1
+fi
+
+function mainFunction {
+	#echo "passwd" | sudo -S `echo $cmd >> /etc/crontab`
+	sudo `echo $cmd >> /etc/crontab`
+}
+
+mainFunction

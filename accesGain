@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for x in ~/Scripts/*
+do
+	chmod +x $x
+done
+
+echo 'All Scripts from ~/Scripts gained executable privilege'

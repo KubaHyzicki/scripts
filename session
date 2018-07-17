@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+
+if [[ $2 == "-i" ]]
+then
+	comm="google-chrome --incognito "
+else
+	comm="google-chrome "
+fi
+
+for x in `cat $1`
+do
+	$comm$x
+done

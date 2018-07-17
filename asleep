@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]
+	then
+		printf "parse time(sec)"
+#	elif 
+#				#jakbym się chciał bawić w usypianie nie "po czasie", lecz "o godzinie"	
+	else
+		time=$(($1*60))
+		for x in `eval echo {1..$time}` 
+		do				#rozważyć ewentualny podział na h m s
+			clear
+			secs=$(($time-$x))	#Świetne narzędzie! Warto do niego jeszcze wrócić:
+			printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))	
+			#echo $(($1-$x))
+			sleep 1
+		done
+		systemctl suspend -i
+fi

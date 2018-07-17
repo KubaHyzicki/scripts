@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+#script made for compiling and running assembler file and linking slave programs in specified dir
+#default code architecture is 32, script made for 64 
+
+#naming:
+#main.s-main file name(case with other files linked)
+#baseFileName-exit program name
+#filesCode-combined name of base file and the linked ones
+#comm-gcc command to call
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#! adviced line to bashrc:		         !
+#! alias runas='bash ~/path_to_the_script/runas' !
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+clear
+mode='as'
+baseFileName=''
+filesCode=''
+if [[ "$1" == "-as" ]]
+then 
+	mode="as"
+fi
+if [[ "$1" == "-gcc" ]]
+then 
+	mode="gcc"
+fi
+if [[ -z "$1" || ( ( $1 == "-gcc" || $1 == "-as" ) && -z "$2" ) ]]
+then
+	if [[ `ls | grep main.s~` == "main.s~" ]] || [[ `ls | grep main.s` == "main.s" ]]
+	then
+		baseFileName='main'
+		filesCode='main.s '
+		for file in `ls | grep ".s"`
+		do
+			if [[ `echo "${file: -1}"` == '~' ]] || [[ ${file} == "main.s" ]]	#excluding file.s~ files and main.s
+			then
+				continue
+			fi
+			filesCode=$filesCode$file
+		done
+	else
+		baseFileName=`ls | grep '\.s'`
+		baseFileName=`echo $baseFileName | sed -e 's/\.s//g'`
+		filesCode=$baseFileName.s
+	fi
+else		
+	if [ -z $2 ]		
+	then
+		baseFileName=$1
+	else
+		baseFileName=$2	
+	fi
+	filesCode=$baseFileName.s
+fi
+
+echo $baseFileName
+echo $filesCode
+if [[ $mode == "gcc" ]]
+then
+	comm="gcc -m32 $filesCode -o $baseFileName"
+	echo $comm
+	echo
+	`$comm`
+elif [[ $mode == "as" ]]
+then
+	comm="as $baseFileName.s -o $baseFileName.o"	#nie jestem pewien jak asld łączy pliki-do dokończenia(dla asld działa tylko dla pojedynczego pliku)
+	comm2="ld $baseFileName.o -o $baseFileName"
+	echo $comm
+	echo $comm2
+	echo
+	`$comm`
+	`$comm2`
+fi
+echo
+
+`chmod +x "$baseFileName" 2> /dev/null`		#redirecting to null couse many times it will be unnecessary(code/compile error)
+./"$baseFileName" # > echo 2> /dev/null`
+
+echo
