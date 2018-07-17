@@ -1,5 +1,10 @@
 #!/usr/bin/sh/bash env
 
+if [[ $1 == "--help" ]]
+then
+	echo "checkNet v2-both just experimental"
+fi
+
 touch ~/NetCheckLog
 touch ~/NetCheckError
 if [[ `cat ~/NetHis` == "" ]]

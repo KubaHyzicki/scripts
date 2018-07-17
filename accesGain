@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#przeznaczone do updatu-na roboczym mam lepszą uniwersalniejszą wersję
+
+
 for x in ~/Scripts/*
 do
 	chmod +x $x

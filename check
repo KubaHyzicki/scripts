@@ -1,5 +1,11 @@
 #!/usr/bin/sh/bash env
 
+
+if [[ $1 == "--help" ]]
+then
+	echo "scripts checks net connection and saves logs-actually it is create to be being runned from jenkins job"
+fi
+
 touch ~/NetHis
 touch ~/NetError
 if [[ `cat ~/NetHis` == "" ]]

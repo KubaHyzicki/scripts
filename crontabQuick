@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ $1 == "--help" ]]
+then
+	echo "was supposed to quickly set and delete crontab jobs NOT FINISHED!!!"
+fi
+
+
 if [ 0 == "$#" ]
 then
 	echo "brak argumentów"

@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
 
+if [[ $1 == "--help" ]]
+then
+	echo "runs in google-chrome all links from target file(format one linke per line)
+type:			session \$filename
+for incognito mode:	session \$filename -i"
+fi
+
+
 if [[ $2 == "-i" ]]
 then
 	comm="google-chrome --incognito "

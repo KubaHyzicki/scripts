@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 if [[ `pwd` == "/home/`whoami`" ]]
 then
     echo "Warning: Running this script in home/user directory may cause problems"
@@ -49,7 +50,7 @@ sorterTests (){
 #Main function
 
 sorter  () {
-    if [ -z "$1" ]
+    if [[ ( -z "$1" ) || ( $1 == "--help" ) ]]
     then
         printf "
 WARNING-Do not use in main dir!!! (lot of work after messing up)
