@@ -3,21 +3,17 @@
 if [[ $1 == "--help" ]]
 then
 	echo"adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
-type -s if new scripts should be added as source not bash-will be executed in current shell"
+basicly if at second line of the script is \"\#_source\" it adds scripts as source"
 fi
-
-call="bash"
-if [[ $1 == "-s" ]]
-then
-	call="source"
-fi
-
 
 for x in  `ls ~/scripts`
 do
+	call='bash'
 	if [[ ! `cat ~/.bashrc | grep -i "alias $x="` ]]
 	then
 		y=`echo "$x" | sed 's/\(.*\)/\L\1/'`
+		if [[ `cat ~/scripts/$x | head -2 | sed 's/.*_//'` == "source" ]]
+			call='source'
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
 		echo "dodano $x"
 	fi

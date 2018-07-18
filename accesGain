@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ $1 == "--help" ]]
+then
+	echo "gives all permitions to all files in directiry
+optionally gives them also to files in subdirectories-type:	accesgain -R"
+fi
+
 if [[ -z $1 ]]
 then
 	for x in `ls -a`; do sudo chmod +rwx $x 2> /dev/null; done
