@@ -12,8 +12,10 @@ do
 	if [[ ! `cat ~/.bashrc | grep -i "alias $x="` ]]
 	then
 		y=`echo "$x" | sed 's/\(.*\)/\L\1/'`
-		if [[ `cat ~/scripts/$x | head -2 | sed 's/.*_//'` == "source" ]]
+		if [[ `cat ~/scripts/$x | sed -n "2p" | sed 's/.*_//'` == "source" ]]
+		then
 			call='source'
+		fi
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
 		echo "dodano $x"
 	fi

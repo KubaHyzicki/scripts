@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-#_source	#variable for script automaticly setting it in .bashrc
-#WARNING!!! Script have to be run as `source scriptName`
+#_source
 
 #hmm ogólnie nie działa w nim milion rzeczy
 
