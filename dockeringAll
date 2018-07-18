@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+#w razie czego do zabijania uruchom skrypt undockerAll: undockerall -c
+
+
+run(){											#run($dir)
+	dir=$1
+	container=`echo $dir | sed -E 's/.*\///g' | sed -E  's/(.*)/\L\1/' `
+	echo "creating $container in $dir"
+	cd $dir				
+	sudo docker build -t $container .
+	#sudo xterm `sudo docker run -it $container`			#nic nie dziaaaaałaaa...... :(
+	#sudo docker run -it $container
+	#sudo nohup bash 'sudo docker run -t $container' &
+	#sudo gnome-terminal -e "bash -c \"docker run -t $container; exec bash\""
+	#gnome-terminal -e "bash -c \"echo -n "tu_wpisz_hasło" | sudo -S docker run -t $container; exec bash\""
+	gnome-terminal -e "bash -c \"sudo -S docker run -t $container; exec bash\""
+	#(up) najbliżej działania-trzeba wszędzie wpisywać hasło, ale większość działa(2 kontenery,
+	#nginx i coś jeszcze nie chodzą), podejżewam że to przez zależności między kontenerami
+	#sudo docker run $container
+	cd -
+}
+
+if [[ $1 == "--help" ]]
+then
+	echo 
+"runs all containers in dir and subdirs in separate terminals(nginx postponed to be the last if apears)"
+	exit
+fi
+
+nginxContainerDir='_none'
+pattern=Dockerfile
+
+for x in `ls -pR`
+do 
+	if [[ ${x::1} == '.' ]]
+	then
+		dir=${x::-1}
+		for file in `ls $dir`
+		do
+			if [[ ( ${file::1} != '.' ) && ( ${file: -1} != ':' ) && (  `echo $file | grep -i $pattern` ) ]]
+			then
+				if [[ `echo $dir | grep -i "nginx"` ]]		#żeby nginx odpalał się jako ostatni(zakładam, że jest tylko jeden)
+				then
+					nginxContainerDir=$dir
+					continue
+				fi
+				run $dir
+				break
+			fi
+		done
+	fi
+done
+
+if [[ $nginxContainerDir != '_none' ]]
+then
+	run $nginxContainerDir
+fi

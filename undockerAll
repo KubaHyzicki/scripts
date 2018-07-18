@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo 
+"stops containers:	base
+removes containers:	-c
+removes images:		-i"
+	exit
+fi
+
+
+if [[ true ]]
+then
+	sudo docker stop $(docker ps -a -q)
+	echo "stopped all containers"
+fi
+
+
+if [[ `echo $1 | grep "\-.*c"` ]]
+then
+	sudo docker rm $(docker ps -a -q)
+	echo "removed all containers"
+fi
+
+if [[ `echo $1 | grep "\-.*i"` ]]
+then
+	sudo docker rmi $(docker images -q)
+	echo "removed all images"
+fi

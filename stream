@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo"easy stream between virtual and main system(set your stream localisation to .config as \$STREAM)
+type for output:	stream
+or:			stream -r
+type for input		stream \$args"
+fi
+
+flag='-w'
+STREAM=`cat ~/scripts/.config | grep 'STREAM' | sed 's/.*=//'`
+if [[ -z $1 ]]
+then
+	cat $STREAM
+	echo
+fi
+
+if [[ $1 == "-r" ]]
+then 
+	cat $STREAM
+	echo
+fi
+
+if [[ ( ${1:0:1} != "-" ) && ( $1 != "" ) ]]
+then
+	rm $STREAM
+	touch $STREAM
+	for arg in $@
+	do
+		echo -n $arg >> $STREAM
+		echo -n " ">> $STREAM
+	done
+fi
+

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-#przeznaczone do updatu-na roboczym mam lepszą uniwersalniejszą wersję
+if [[ -z $1 ]]
+then
+	for x in `ls -a`; do sudo chmod +rwx $x 2> /dev/null; done
+	echo "gained acces to all files in directory"
+fi
 
-
-for x in ~/Scripts/*
-do
-	chmod +x $x
-done
-
-echo 'All Scripts from ~/Scripts gained executable privilege'
+if [[ $1 == "-R" ]]
+then
+	for x in `ls -a`; do sudo chmod -R +rwx $x 2> /dev/null; done
+	echo "gained acces to all files in directory and subdirectories"
+fi

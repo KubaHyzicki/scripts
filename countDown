@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]
+then
+	echo "type time in secs"
+fi
+
+for x in `eval echo {$1..1}`
+do
+	clear
+	printf '%dh:%dm:%ds\n' $(($x/3600)) $(($x%3600/60)) $(($x%60))
+	sleep 1
+done
+
+clear
+echo "end!"

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo "runs container in dir
+type container name or skip it and its name will equals directory name"
+	exit 0
+fi
+
+if [[ -z $1 ]]
+then
+	container=`pwd | sed "s/.*\///" | sed 's/\(.*\)/\L\1/'`
+else
+	container=$1
+fi
+
+sudo docker build -t $container .
+sudo docker run -it $container

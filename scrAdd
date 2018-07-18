@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo"adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
+type -s if new scripts should be added as source not bash-will be executed in current shell"
+fi
+
+call="bash"
+if [[ $1 == "-s" ]]
+then
+	call="source"
+fi
+
+
+for x in  `ls ~/scripts`
+do
+	if [[ ! `cat ~/.bashrc | grep -i "alias $x="` ]]
+	then
+		y=`echo "$x" | sed 's/\(.*\)/\L\1/'`
+		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
+		echo "dodano $x"
+	fi
+done

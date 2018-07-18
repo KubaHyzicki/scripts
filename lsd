@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+#searches for pattern in file names in dir and subdirs(usefull in reading projects)
+#with '-f' searches in files instead
+#with '-d' gives on output files in found dir
+
+###worth to try like: cat $(lsd [-f] $pattern) | less
+###		      cat $(lsd [-d] $pattern) | less
+###to see all files insides and easly search with "/" for multiple occurrence
+
+if [[ $1 == "--help" ]]
+then
+	echo "script to search recursively in the current directory for files or fileses insides that matches given pattern
+type: 					lsd \$pattern_to_look_for
+or when searching files insides: 	lsd -f \$pattern_to_look_for
+exposing files if dir founded:		lsd -d \$pattern_to look_for
+
+also worth to try like: 		cat \$(lsd [-f] \$pattern) | less 
+					cat \$(lsd [-d] \$pattern) | less 
+to see all files insides and easly search with \"/\" for multiple occurrence
+"
+	exit
+fi
+if [[ -z $1 ]]
+then
+	echo "no pattern given, type lsd --help to see more"
+	exit
+fi
+
+if_sth_founded=0
+pattern=$*
+mssg_not_founded="sorry, no results"
+if [[ ${1::1} == "-" ]]		#nie wykasuje tego z poszczególnych -d/-f itp, bo może kiedyś mnie najść na argument wieloliterowy
+then
+	pattern=${pattern:3}
+fi
+
+if [[ $1 == "-f" ]]
+then
+	#pattern=${pattern:3}
+	for x in `ls -pR`
+	do  
+	        if [[ ${x::1} == '.' ]]
+       		then
+	                dir=$x
+        		continue
+		fi
+	        if [[ `cat ${dir:0:-1}/$x 2> /dev/null | grep -i "$pattern"` ]]
+       		then
+	                echo ${dir::-1}/$x
+        	        if_sth_founded=1
+	        fi
+	done
+	
+	if [[ $if_sth_founded == 0 ]]
+	then
+	        echo $mssg_not_founded
+	fi
+	
+	exit 0
+fi
+
+
+
+if [[ $1 == "-d" ]]
+then
+	#pattern=${pattern:3}
+	for x in `ls -pR`
+	do 
+		if [[  ( ${x::1} == '.' ) && ( `echo $x | grep -i $pattern` ) ]]
+		then
+			dir=${x::-1}
+			for file in `ls $dir`
+			do
+				if_sth_founded=1
+				if [[ ( ${file::1} != '.' ) && ( ${file: -1} != ':' ) ]]
+				then
+					echo $dir/$file
+				fi
+			done
+		fi
+	done
+	
+	if [[ $if_sth_founded == 0 ]]
+	then
+		echo $mssg_not_founded
+	fi
+
+	exit 0
+fi
+
+
+
+if [[ ${1:0:1} != "-" ]]
+then
+	for x in `ls -pR`
+	do 
+		if [[ ${x::1} == '.' ]]
+		then
+			dir=${x::-1}
+			continue
+		fi
+		if [[ `echo $x | grep -i $pattern` ]]
+		then
+			echo $dir\/$x
+			if_sth_founded=1
+		fi
+	done
+	
+	if [[ $if_sth_founded == 0 ]]
+	then
+		echo $mssg_not_founded
+	fi
+
+	exit 0
+fi
