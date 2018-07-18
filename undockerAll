@@ -2,10 +2,9 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo 
-"stops containers:	base
-removes containers:	-c
-removes images:		-i"
+	echo "stops containers:	undockerall
+removes containers:	undockerall -c
+removes images:		undockerall -i"
 	exit
 fi
 

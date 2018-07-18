@@ -2,7 +2,7 @@
 
 if [[ $1 = "--help" ]]
 then
-	echo"just simple print picture that announces the end of previous comand
+	echo "just simple print picture that announces the end of previous comand
 type:	\$currentlyExecutingCommand && callend
 or:	\$currentlyExecutingCommand; callend"
 fi

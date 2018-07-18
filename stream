@@ -2,7 +2,7 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo"easy stream between virtual and main system(set your stream localisation to .config as \$STREAM)
+	echo "easy stream between virtual and main system(set your stream localisation to .config as \$STREAM)
 type for output:	stream
 or:			stream -r
 type for input		stream \$args"

@@ -2,7 +2,7 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo"adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
+	echo "adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
 basicly if at second line of the script is \"\#_source\" it adds scripts as source"
 fi
 
