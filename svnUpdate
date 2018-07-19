@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+#w założeniu ma updatować tylko konkretne diry, subdiry w dirach, rozszerzenia, nazwy plików
+
+#sktypt bazuje na poleceniach:
+#svn checkout $link_do_głównego_repo --depth empty 		(dodać warunek na to czy już jest utworzone+żeby się sprawdzał tylko przy pierwszym wywołaniu/analogicznie ustalaniu ilości argumentów)
+#svn update --parents $ścieżka_z_diru
+#(dodatkowo)svn list --recursive(lub właśnie nie recursive!!!-łatwiejsze w kontroli) $link/dir(nie jestem pewny czy oba działają)
+
+
+#skrypt porusza się po jednym poziomie głębokości
+#schemat configa do ustalenia
+
+
+#rekursywne wywoływanie: script $dir (ewentualnie)$nr_linii_configa
+
+

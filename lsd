@@ -28,14 +28,20 @@ then
 fi
 
 if_sth_founded=0
-pattern=$*
-mssg_not_founded="sorry, no results"
-if [[ ${1::1} == "-" ]]		#nie wykasuje tego z poszczególnych -d/-f itp, bo może kiedyś mnie najść na argument wieloliterowy
+if [[ -z $2 ]]			#było pattern=${*:3 lub więcej}, po zmianie sposobu czytania argumentów trzeba było to zmienić, ale to jest do ogarnięcia
 then
-	pattern=${pattern:3}
+	pattern=$1
+else
+	pattern=$2
 fi
 
-if [[ $1 == "-f" ]]
+mssg_not_founded="sorry, no results"
+#if [[ ${1::1} == "-" ]]		#nie wykasuje tego z poszczególnych -d/-f itp, bo może kiedyś mnie najść na argument wieloliterowy
+#then
+#	pattern=${pattern:3}
+#fi
+
+if [[ ( `echo $1 | grep "\-.*f"` ) && ( ${1::1} == "-" ) ]]
 then
 	#pattern=${pattern:3}
 	for x in `ls -pR`
@@ -62,7 +68,7 @@ fi
 
 
 
-if [[ $1 == "-d" ]]
+if [[ ( `echo $1 | grep "\-.*d"` ) && ( ${1::1} == "-" ) ]]
 then
 	#pattern=${pattern:3}
 	for x in `ls -pR`

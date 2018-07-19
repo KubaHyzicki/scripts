@@ -28,5 +28,13 @@ do
 	fi
 done
 
+if 
+
 echo $comm
-`$comm`			#coś z tym nie do końca działa, niby komenda jest poprawna, a jednak się pokazują ciągle jakieś dziwne ciężkie do określenia błędy...
+if [[ `$comm 2> | grep ': command not found'` ]]
+then
+	al=`echo $comm | cut -d" " -f1`
+	cat ~/.bashrc | grep "alias =
+
+			#1) nie działają aliasy!!!
+			#2) w razie komendy z gwiazdką grep przeszukuje też wówczas będące pod gwiazdką słowa i ostatecznie wywołuje `command *` w danej lokalizacji

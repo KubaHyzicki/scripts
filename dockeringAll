@@ -54,5 +54,7 @@ done
 
 if [[ $nginxContainerDir != '_none' ]]
 then
+	echo;echo;echo
+	read -p "Waiting for other images to be runned..."
 	run $nginxContainerDir
 fi
