@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 if [[ $1 == "--help" ]]
 then
 	echo "easy stream between virtual and main system(set your stream localisation to .config as \$STREAM)
@@ -10,6 +11,10 @@ fi
 
 flag='-w'
 STREAM=`cat ~/scripts/.config | grep 'STREAM' | sed 's/.*=//'`
+
+
+#dodać opcję streamu dla plików(wrzuć plik do stream lokalizacji) lub po prostu wyświetl lokalizację STREAM folderu żeby dało się użyć np. `cp $file `stream -l``
+
 if [[ -z $1 ]]
 then
 	cat $STREAM
