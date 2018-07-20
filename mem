@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+low=~/Documents/mem_low
+hight=~/Documents/mem_hight				#dla ważniejszych rzeczy(dla podziału), do późniejszych updatów
+
+if [[ $1 == "--help" ]]
+then
+	echo "
+fi
+
+
+touch $low
+touch $hight
+
+
+if [[ -z $1 ]]
+then
+	cat $low | tail -1 | sed 's/;/\n/g'
+	echo
+else
+	echo >> $low
+	printf "$1" | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $low
+fi
