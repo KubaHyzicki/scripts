@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
 
 #script made for compiling and running assembler file and linking slave programs in specified dir
-#default code architecture is 32, script made for 64 
+#default code architecture is 32, script made for 64(becouse creared for self using purpose)
 
 #naming:
-#main.s-main file name(case with other files linked)
-#baseFileName-exit program name
-#filesCode-combined name of base file and the linked ones
-#comm-gcc command to call
-
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#! adviced line to bashrc:		         !
-#! alias runas='bash ~/path_to_the_script/runas' !
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#main.s - main file name(case with other files linked)
 
 if [[ $1 == "--help" ]]
 then

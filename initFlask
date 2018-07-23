@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#_source
+
+
+if [[ $1 == "--help" ]]
+then
+	echo "script inits basic flask app setup
+type: 				initflask \$appName
+or for base name (\"app\"):	initflask
+then to start app just type:	run"
+fi
+
+if [[ -z $1 ]]
+then
+	name=app
+else
+	name=$1
+fi
+
+if [[ true ]]
+then
+	mkdir $name
+	cd ./$name
+	name=$name.py
+	
+	touch $name
+	echo "#!/usr/bin/python3
+
+from flask import Flask
+from flask import request
+
+app = Flask(__name__)
+
+@app.route('/')
+def mainPage():
+	return \"...\"
+
+if __name__ == \"__main__\":
+	app.run(host=\"0.0.0.0\",port=5000,debug=True)
+" > $name
+
+	mkdir templates
+	mkdir static
+	mkdir static/style
+	mkdir static/scripts
+
+
+	alias run="python3 $name"
+fi
+

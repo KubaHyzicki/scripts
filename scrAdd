@@ -6,6 +6,8 @@ then
 basicly if at second line of the script is \"\#_source\" it adds scripts as source"
 fi
 
+amountAdded=0
+
 for x in  `ls ~/scripts`
 do
 	call='bash'
@@ -16,7 +18,19 @@ do
 		then
 			call='source'
 		fi
+		if [[ `cat ~/scripts/$x | sed -n "2p" | sed 's/.*_//'` == "none" ]]
+		then
+			continue
+		fi
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
-		echo "dodano $x"
+		echo "added $x"
+		amountAdded=$(($amountAdded+1))
 	fi
 done
+
+if [[ $amountAdded == "0" ]]
+then
+	echo "No aliases added"
+else
+	echo "Added $amountAdded aliases"
+fi

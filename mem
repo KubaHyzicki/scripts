@@ -4,19 +4,56 @@ hight=~/Documents/mem_hight				#dla ważniejszych rzeczy(dla podziału), do pó�
 
 if [[ $1 == "--help" ]]
 then
-	echo "
+	echo "script acting like an additional cache
+to see last input type: 	mem
+to see n inputs type:		mem -\$n
+to write to memory:		mem \$your_input
+to clear cache:			mem -c
+to see all cache:		mem -a/all
+to see last x lines:		mem -\$x"
 fi
 
 
 touch $low
 touch $hight
-
-
-if [[ -z $1 ]]
+file=$low
+lines=1
+args=$*
+if [[ $1 == "-h" ]]
 then
-	cat $low | tail -1 | sed 's/;/\n/g'
+	file=$hight
+fi
+
+if [[ echo $1 | grep '-\d' ]] 				#no nie działa....po prostu za cholerę tego w żaden sposób nie łapie...
+then
+	$lines=`echo $1 | sed 's/-//'`
+	echo złapane
+fi
+
+
+
+if [[ $1 == "-c" ]]
+then
+	rm $low $hight
+	exit
+fi
+
+if [[ ($1 == "-a") || ($1 == "-all") ]]
+then
+	cat $file | sed 's/;/\n/g'
 	echo
-else
-	echo >> $low
-	printf "$1" | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $low
+	exit
+fi
+
+if [[ (-z $1) || ($1 == -[::digit::]) ]]		#no digit nie działa....po prostu za cholerę tego w żaden sposób nie łapie...
+then
+	cat $file | tail -$lines | sed 's/;/\n/g'
+	echo
+	exit
+fi
+
+if [[ true ]]
+then
+	echo >> $file
+	printf $args | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $file
 fi
