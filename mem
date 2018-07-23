@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 low=~/Documents/mem_low
-hight=~/Documents/mem_hight				#dla ważniejszych rzeczy(dla podziału), do późniejszych updatów
+hight=~/Documents/mem_hight					#dla ważniejszych rzeczy(dla podziału), do późniejszych updatów
 
 if [[ $1 == "--help" ]]
 then
@@ -18,16 +18,15 @@ touch $low
 touch $hight
 file=$low
 lines=1
-args=$*
+args=$*								#to nie działa, to trzeba poprawić!!!!
 if [[ $1 == "-h" ]]
 then
 	file=$hight
 fi
 
-if [[ echo $1 | grep '-\d' ]] 				#no nie działa....po prostu za cholerę tego w żaden sposób nie łapie...
-then
-	$lines=`echo $1 | sed 's/-//'`
-	echo złapane
+if [[ `echo $1 | grep -E '\-+[1-9]'` ]]				#eh normalne łapanie cyfr nie działa-wychodzi tylko w ten sposób...działa, ale warto kiedyś na to
+then								#spojrzeć w razie znalezienia bardziej przyjaznego rozwiązania(jest też jeszce niżej(znacznik))
+	lines=`echo $1 | sed 's/-//'`
 fi
 
 
@@ -45,8 +44,12 @@ then
 	exit
 fi
 
-if [[ (-z $1) || ($1 == -[::digit::]) ]]		#no digit nie działa....po prostu za cholerę tego w żaden sposób nie łapie...
+if [[ (-z $1) || (`echo $1 | grep -E '\-+[1-9]'`) ]]		#znaczek-łapanie cyfr
 then
+	if [[ $((`cat $file | wc -l` < $lines)) ]]
+	then
+		lines=`cat $file | wc -l`	
+	fi
 	cat $file | tail -$lines | sed 's/;/\n/g'
 	echo
 	exit
