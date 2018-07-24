@@ -2,20 +2,39 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo "gives all permitions to all files in directiry
-optionally gives them also to files in subdirectories-type:	accesgain -R"
+	echo "gives all permitions and become owner of all files in directiry
+optionally gives them also to files in subdirectories-type:	accesgain -R
+for only chmod +x on all files type(non sudo):			accesgain -c"
 fi
 
 
-if [[ -z $1 ]]
+privil='rwx'
+mode='sudo'
+rec=''
+#own='sudo chown `whoami` $x'				#whoami nie działa..możliwe, że trzeba tego używać jako #_source
+own=''
+mess="gained acces and own to all files in directory"
+
+if [[ (${1::1} == "-") && (`echo $1 | grep x`) ]] 
 then
-	for x in `ls -a`; do sudo chmod +rwx $x 2> /dev/null; done
-	chown
-	echo "gained acces to all files in directory"
+	privil='x'
+	mode=''
+	own=''
+	mess='gained execute to all files in directory'
 fi
 
-if [[ $1 == "-R" ]]
+if [[ (${1::1} == "-") && (`echo $1 | grep R`) ]]
 then
-	for x in `ls -a`; do sudo chmod -R +rwx $x 2> /dev/null; done
+	for x in `ls -a`; do $mode chmod $rec +$privil $x 2> /dev/null; done
 	echo "gained acces to all files in directory and subdirectories"
+fi
+
+if [[ true ]]
+then
+	for x in `ls -a`
+	do
+		$mode chmod $rec +$privil $x 2> /dev/null
+	done
+	$own
+	echo $mess
 fi

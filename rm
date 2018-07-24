@@ -17,4 +17,4 @@ remove (){
 	mv $1 ~/.rm_backup
 }
 
-if 
+#if [[ $1 ==
