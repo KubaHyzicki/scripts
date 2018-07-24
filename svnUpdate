@@ -7,11 +7,32 @@
 #svn update --parents $ścieżka_z_diru
 #(dodatkowo)svn list --recursive(lub właśnie nie recursive!!!-łatwiejsze w kontroli) $link/dir(nie jestem pewny czy oba działają)
 
-
 #skrypt porusza się po jednym poziomie głębokości
 #schemat configa do ustalenia
-
 
 #rekursywne wywoływanie: script $dir (ewentualnie)$nr_linii_configa
 
 
+
+#....tak sobie myślę, że to poniżej jest wystarczające...ewentualnie do zgarniania repo powyższym sposobem zrobić osobny skrypt/reakcję na parametr tego skryptu..
+
+
+#na razie sam update istniejących repo:
+for x in `ls ~/svn`					#pętla po ~/svn/$projekt
+do
+	for x2 in `ls ~/svn/$x`				#pętla po ~/svn/$projekt/$repo
+	do
+		if [[ $x2 == ".svn" ]]			#biorę też pod uwagę projekty mniejsze, które będą miały .svn bezpośrednio w folderze projektu
+		then
+			svn update ~/svn/$x
+		fi
+
+		for x3 in `ls -A ~/svn/$x/$x2`		#pętla po ~/svn/$projekt/$repo/[pliki, w tym .svn]
+		do
+			if [[ $x3 == ".svn" ]]
+			then
+				svn update ~/svn/$x/$x2
+			fi
+		done
+	done
+done
