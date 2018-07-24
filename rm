@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
-#_none
+#_source
 
 #hmmm pomysł wyszedł z wypadku użycia rm -rf na złym folderze, a dokładnie miał to być subfolder...nic się strasznego nie stało, ale na przyszłość można zrobić rm, który oprócz usunięcia robi backup ostatnio usuniętych rzeczy
 
 #dla dużych rzeczy kopiowanie może być problematyczne więc zamiast kopiować można przenosić do np. ~/.rm_backup/
 #a dokładniej:
-#mkdir ~/.rm_backup 2> /dev/null
-#for x in `ls ~/.rm_backup`;do \rm -rf $x;done
-#mv $1 ~/.rm_backup
+
+
+
+remove (){
+	mkdir ~/.rm_backup 2> /dev/null
+	for x in `ls ~/.rm_backup`
+	do
+		\rm -rf $x
+	done
+	mv $1 ~/.rm_backup
+}
+
+if 

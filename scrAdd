@@ -23,7 +23,7 @@ do
 			continue
 		fi
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
-		echo "added $x"
+		echo "$call $x"
 		amountAdded=$(($amountAdded+1))
 	fi
 done
