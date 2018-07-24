@@ -18,14 +18,14 @@ touch $low
 touch $hight
 file=$low
 lines=1
-args=$*								#to nie działa, to trzeba poprawić!!!!
+args=$*
 if [[ $1 == "-h" ]]
 then
 	file=$hight
 fi
 
-if [[ `echo $1 | grep -E '\-+[1-9]'` ]]				#eh normalne łapanie cyfr nie działa-wychodzi tylko w ten sposób...działa, ale warto kiedyś na to
-then								#spojrzeć w razie znalezienia bardziej przyjaznego rozwiązania(jest też jeszce niżej(znacznik))
+if [[ $1 =~ \-+[1-9] ]]
+then
 	lines=`echo $1 | sed 's/-//'`
 fi
 
@@ -44,9 +44,9 @@ then
 	exit
 fi
 
-if [[ (-z $1) || (`echo $1 | grep -E '\-+[1-9]'`) ]]		#znaczek-łapanie cyfr
+if [[ (-z $1) || ($1 =~ \-+[1-9]) ]]
 then
-	if [[ $((`cat $file | wc -l` < $lines)) ]]
+	if ((`cat $file | wc -l` < $lines))
 	then
 		lines=`cat $file | wc -l`	
 	fi
@@ -58,5 +58,5 @@ fi
 if [[ true ]]
 then
 	echo >> $file
-	printf $args | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $file
+	echo -n $args | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $file
 fi
