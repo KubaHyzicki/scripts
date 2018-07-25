@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 low=~/Documents/mem_low
-hight=~/Documents/mem_hight					#dla ważniejszych rzeczy(dla podziału), do późniejszych updatów
+hight=~/Documents/mem_hight
 
 if [[ $1 == "--help" ]]
 then
 	echo "script acting like an additional cache
-to see last input type: 	mem
-to see n inputs type:		mem -\$n
-to write to memory:		mem \$your_input
-to clear cache:			mem -c
-to see all cache:		mem -a/all
-to see last x lines:		mem -\$x"
+to see last input type: 				mem
+to see n inputs type:					mem -\$n
+to write to memory:					mem \$your_input
+to clear cache:						mem -c
+to see all cache:					mem -a/all
+to operate on second like more important cache type:	mem -h"
+exit
 fi
 
 
@@ -18,33 +19,32 @@ touch $low
 touch $hight
 file=$low
 lines=1
-args=$*
-if [[ $1 == "-h" ]]
+fstArgNmb=1
+if [[ (${1::1} == "-") && (`echo $1 | grep h`) ]]
 then
 	file=$hight
+	fstArgNmb=$(($fstArgNmb+1))
 fi
 
-if [[ $1 =~ \-+[1-9] ]]
+if [[ $1 =~ \-.*[1-9]+.* ]]
 then
-	lines=`echo $1 | sed 's/-//'`
+	lines=`echo $1 | sed 's/-//' | sed 's/[a-zA-Z]//g'`
 fi
 
 
 
-if [[ $1 == "-c" ]]
+if [[ (${1::1} == "-") && (`echo $1 | grep c`)  ]]
 then
-	rm $low $hight
+	rm $file
 	exit
 fi
 
-if [[ ($1 == "-a") || ($1 == "-all") ]]
+if [[ (${1::1} == "-") && ( (`echo $1 | grep a`) || (`echo $1 | grep all`) ) ]]
 then
-	cat $file | sed 's/;/\n/g'
-	echo
-	exit
+	lines=`cat $file | wc -l`
 fi
 
-if [[ (-z $1) || ($1 =~ \-+[1-9]) ]]
+if [[ (-z $1) || ( ($1 =~ \-.+) && (-z $2) ) ]]
 then
 	if ((`cat $file | wc -l` < $lines))
 	then
@@ -55,8 +55,14 @@ then
 	exit
 fi
 
+
 if [[ true ]]
 then
+	for n in `seq $fstArgNmb $#`
+	do
+		eval x='$'$n
+		args=$args$x' '
+	done
 	echo >> $file
 	echo -n $args | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\;/g' >>  $file
 fi
