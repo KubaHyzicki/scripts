@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo "creates templates of all script files in dir(for now only for .py[pytest])"
+fi
+
+testName="test_"
+#Vpytest=`pytest --version ` 				#ciężko to jakkolwiek przepipować przez seda/przypisać do zmiennej
+
+
+pytest () {	#arh=fileName
+	if [[ -z $1 ]]
+	then
+		echo "ERROR-no fileName given"
+		return 1	
+	fi
+	fileName=$1
+	t=$testName$fileName
+	echo "         "$t:
+	#cat $fileName | grep class | sed 's/class .+['	#niepotrzebne?
+	echo $fileName
+	cat $fileName | grep def | sed 's/[ 	]*def[ 	]*//' | sed 's/(.*//'		#zostają tabulacje... :/
+	echo ciastko
+
+
+
+
+
+
+
+#	sudo touch $t					#włączyć dopiero po testach innych cześci
+#	sudo echo "from $x import *			#włączyć dopiero po testach innych cześci
+#
+#" > t
+}
+
+
+
+for x in `ls -R`
+do
+	if [[ ${x::5} == "test_" ]]
+	then
+		continue
+	fi
+	if  [[ ${x: -3} == ".py" ]]
+	then
+		#if [[ $Vpytest !=			#ToDo-ciężkie acz nie w 100% wymagane
+		pytest $x
+	fi
+done

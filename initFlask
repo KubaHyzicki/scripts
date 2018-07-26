@@ -17,6 +17,12 @@ else
 	name=$1
 fi
 
+if [[ `ls | grep $name` ]]
+then
+	echo "there already exists a flask project with that name"
+	exit
+fi
+
 if [[ true ]]
 then
 	mkdir $name
@@ -46,5 +52,6 @@ if __name__ == \"__main__\":
 
 
 	alias run="python3 $name"
+	gedit $name &
 fi
 
