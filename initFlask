@@ -39,7 +39,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def mainPage():
-	return \"...\"
+	return \"...ciastko...\"
 
 if __name__ == \"__main__\":
 	app.run(host=\"0.0.0.0\",port=5000,debug=True)
@@ -51,7 +51,7 @@ if __name__ == \"__main__\":
 	mkdir static/scripts
 
 
-	alias run="python3 $name"
+	alias run="for x in \`jobs | sed 's/\[//' | sed 's/\].*//'\`;do kill %$x;done;python3 $name &"
 	gedit $name &
 fi
 
