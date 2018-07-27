@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo "script deletes lines in file with given pattern
+but! It also creates backup of the file and shows diff of changes
+to delete lines type:			deletelines \$pattern \$file
+to revert last changes type:		deletelines -r \$file
+to not overwrite log file type:		deletelines -l \$pattern \$file"
+fi
+
+copy=~/Documents/deleteLines_copy
+logs=~/Documents/deleteLines_log
+
+if [[ ${1::1} == "-" ]]
+then
+	args=$1
+	pattern=$2
+	file=$3
+else
+	pattern=$1
+	file=$2
+fi
+logParse='echo' `pwd`'/'$file ' > '$logs
+
+
+
+if [[ `echo $args | grep 'r'` ]]
+then
+	file=$2
+	#for x in
+fi
+
+if [[ `echo $args | grep 'l'` ]]
+then
+	logParse=`echo $logParse | sed 's|>|>>|'`
+fi
+
+cp $file $copy
+
+sed -i "/$pattern/d" ./$file
+
+
+eval $logParse
+#diff $file $copy >> $logs
+
+cat $logs
