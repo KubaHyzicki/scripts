@@ -41,6 +41,16 @@ mssg_not_founded="sorry, no results"
 #	pattern=${pattern:3}
 #fi
 
+
+#colored=''					#żeby uwidaczniało te, które pasują idealnie...niby działa, ale jakoś coś chyba za dobrze(czasem)
+#if [[ `echo $x | grep -ix $pattern` ]]
+#then 
+#	colored='tput setaf 1'
+#fi
+#$colored;echo ${dir::-1}/$x
+
+
+
 if [[ ( `echo $1 | grep "\-.*f"` ) && ( ${1::1} == "-" ) ]]
 then
 	#pattern=${pattern:3}
