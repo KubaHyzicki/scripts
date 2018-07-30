@@ -8,6 +8,7 @@ usage: 1)finds lines by \$pattern
 ...\$preffix[oldVal]\$suffix... -> ...\$prefix\$newVal\$suffix...
 It also creates a copy of last changed file, logs from
 changes(not only lastest) and allows them to use it to revert
+deletelines -c;for file in lsd \$fileNamePattern/lsd -f \$pattern/[oba na pipie];do changelines -al \$pattern \$prefix \$newVal \$suffix \$file \$addedLine;done;deletelines -s
 to change lines type:			changelines \$pattern \$prefix \$newVal \$suffix \$file
 to revert changes from log file:	changelines -r
 to not overwrite log file type:		changelines -l 			...
@@ -97,13 +98,23 @@ fi
 
 cp $file $copy
 
-line=`cat $file | grep $pattern`						#hmm w testach zakładam, że linia występuje tylko raz, później 
-if [[ (-z $line) && !(-z addedLine) ]]						#można dodać iterację poniższychkroków po outpucie grepa
+lines=`cat $file | grep $pattern`
+
+if [[ (-z $lines) && (-z addedLine) ]]
+then
+	echo "wzoru nie odnaleziono, brak reguły na nieodnalezienie"
+	exit
+fi
+if [[ (-z $lines) && !(-z addedLine) ]]
 then
 	echo $addedLine >> $file
 else
-	lineUpd=`echo $line | sed "s/$prefix.*$suffix/$prefix$val$suffix/"`		
-	sed -i "s|$line|$lineUpd|" $file
+	for line in $lines
+	do	
+		echo ciastko
+		lineUpd=`echo $line | sed "s/$prefix.*$suffix/$prefix$val$suffix/"`		
+		sed -i "s|$line|$lineUpd|" $file
+	done
 fi
 eval $logParse
 diff $file $copy >> $logs

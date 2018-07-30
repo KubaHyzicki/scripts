@@ -5,7 +5,7 @@ then
 	echo "script deletes lines in file with given pattern
 BUT! It also creates a copy of last changed file, logs from
 changes(not only lastest) and allows them to use it to revert
-###deletelines -c;for x in lsd \$pattern/lsd -f \$pattern;do deletelines -l \$pattern \$x;done;deletelines -s###
+###deletelines -c;for x in lsd \$fileNamePattern/lsd -f \$pattern;do deletelines -l \$pattern \$file;done;deletelines -s###
 to delete lines type:			deletelines \$pattern \$file
 to revert changes from log file:	deletelines -r
 to not overwrite log file type:		deletelines -l \$pattern \$file
