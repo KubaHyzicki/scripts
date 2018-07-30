@@ -3,14 +3,15 @@
 if [[ $1 == "--help" ]]
 then
 	echo "script deletes lines in file with given pattern
-but! It also creates a copy of last changed file, logs from
+BUT! It also creates a copy of last changed file, logs from
 changes(not only lastest) and allows them to use it to revert
+###deletelines -c;for x in lsd \$pattern/lsd -f \$pattern;do deletelines -l \$pattern \$x;done;deletelines -s###
 to delete lines type:			deletelines \$pattern \$file
 to revert changes from log file:	deletelines -r
 to not overwrite log file type:		deletelines -l \$pattern \$file
 to just display(show) logs file:	deletelines -s
 to clear logs and backup file:		deletelines -c"
-	exit 0								#did not want "-d" for display couse of "d" being like "delete"
+	exit								#did not want "-d" for display couse of "d" being like "delete"
 fi
 
 copy=~/Documents/deleteLines_copy
@@ -46,7 +47,6 @@ if [[ `echo $args | grep 'r'` ]]
 then
 	temp=~/Documents/deleteLines_temp
 	rm -f $temp
-	file='hmm'
 	while read -r line
 	do
 		if [[ (${line::1} == '/') && !(-s $temp) ]] 	#case initial start-no requirement of patching yet
@@ -67,7 +67,7 @@ then
 		echo $line >> $temp
 	done < $logs
 	patch -s $file $temp 			#(temp=patch)
-	echo "patched $file"
+	echo "reverted $file"
 	rm -f $temp
 	exit
 fi
@@ -81,7 +81,7 @@ fi
 
 cp $file $copy
 
-sed -i "/$pattern/d" ./$file
+sed -i "/$pattern/d" $file
 
 eval $logParse
 diff $file $copy >> $logs

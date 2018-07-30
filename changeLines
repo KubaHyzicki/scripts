@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "--help" ]]
+then
+	echo "script changes line in file with given pattern
+usage: 1)finds lines by \$pattern
+2)changes in each line 
+...\$preffix[oldVal]\$suffix... -> ...\$prefix\$newVal\$suffix...
+It also creates a copy of last changed file, logs from
+changes(not only lastest) and allows them to use it to revert
+to change lines type:			changelines \$pattern \$prefix \$newVal \$suffix \$file
+to revert changes from log file:	changelines -r
+to not overwrite log file type:		changelines -l 			...
+to just display(show) logs file:	changelines -s
+to clear logs and backup file:		changelines -c
+to add line if pattern didnt fouded	changelines -a 			... 			\$addedLine(as 7th arg)"
+	exit								#did not want "-d" for display couse of script similarity to deleteLines one and there is "-s"
+fi
+
+copy=~/Documents/changeLines_copy
+logs=~/Documents/changeLines_log
+addedLine=''
+
+if [[ ${1::1} == "-" ]]
+then
+	args=$1
+	pattern=$2
+	prefix=$3
+	val=$4
+	suffix=$5
+	file=$6
+else
+	pattern=$1
+	prefix=$2
+	val=$3
+	suffix=$4
+	file=$5
+fi
+logParse='echo '`pwd`'/'$file' > '$logs
+
+if [[ `echo $args | grep 's'` ]]
+then
+	cat $logs
+	exit
+fi
+
+
+if [[ `echo $args | grep 'c'` ]]
+then
+	echo -n > $logs
+	echo -n > $copy
+	exit
+fi
+
+
+if [[ `echo $args | grep 'r'` ]]
+then
+	temp=~/Documents/changeLines_temp
+	rm -f $temp
+	while read -r line
+	do
+		if [[ (${line::1} == '/') && !(-s $temp) ]] 	#case initial start-no requirement of patching yet
+		then
+			file=$line
+			touch $temp
+			continue
+		fi
+		if [[ ${line::1} == '/' ]]
+		then
+			patch -s $file $temp 	#(temp=patch)
+			echo "patched $file"
+			rm -f $temp
+			touch $temp
+			file=$line
+			continue
+		fi
+		echo $line >> $temp
+	done < $logs
+	patch -s $file $temp 			#(temp=patch)
+	echo "reverted $file"
+	rm -f $temp
+	exit
+fi
+
+
+if [[ `echo $args | grep 'l'` ]]
+then
+	logParse=`echo $logParse | sed 's|>|>>|'`
+fi
+
+
+if [[ `echo $args | grep 'a'` ]]
+then
+	addedLine=$7
+fi
+
+
+cp $file $copy
+
+line=`cat $file | grep $pattern`						#hmm w testach zakładam, że linia występuje tylko raz, później 
+if [[ (-z $line) && !(-z addedLine) ]]						#można dodać iterację poniższychkroków po outpucie grepa
+then
+	echo $addedLine >> $file
+else
+	lineUpd=`echo $line | sed "s/$prefix.*$suffix/$prefix$val$suffix/"`		
+	sed -i "s|$line|$lineUpd|" $file
+fi
+eval $logParse
+diff $file $copy >> $logs
+cat $logs
