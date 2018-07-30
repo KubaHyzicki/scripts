@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+#dir:
+#d
+
+#EDITION
+#findBy:
+#x y z
+#pattern:
+#p
+#prefix:
+#px
+#value:
+#v
+#suffix:
+#sx
+
+#DELETION
+#findBy:
+#x y z
+
+
+if [[ $1 == --help ]]
+then
+	echo "ciastko"
+fi
+
+
+file=~/Documents/massiveEditPatternFile
+
+if [[ !(`ls | grep massiveEditPatternFile`) ]]
+then
+	echo "no patternFile"
+	echo "creating and opening patternFile"
+	#touch $file
+	echo -e "dir:\nd\n\n\nEDITION\nfindBy:\nx y z\npattern:\np\nprefix:\npx\nvalue:\nv\nsuffix:
+sx\npattern:\np2\nprefix2:\npx2\nvalue2:\nv2\nsuffix2:\nsx2\n\nfindBy:\n...\n\n\nDELETION\nfindBy:\nx y z" > $file
+	#gedit $file &
+	exit
+fi
+
+if [[ true ]]
+then
+	
+
+fi
