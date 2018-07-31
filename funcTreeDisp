@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+#ogólnie tylko pomysł...coś chyba jak konwerter do header+source
+
+#ma za zadanie przejechać kod i w zależności od języka wychwicić funkcje luźne polecenia, podzielić na sekcje i ustalić z której sekcji jaką inną się wywołuje
+#w późniejszym etapie można dodać wyświetlanie tego za pomocą jakiegoś przejrzystego drzewka zależności i nawet dodać kolorowanie poszczególnych metod, bo pewnie będa wywoływane z kilku miejsc(lista z 20 kolorów, iterator po nich i może tabela przypasowania albo coś w rodzaju dynamicznych zmiennych typu $funcName_colour i eval na nich by sprawdzać czy jest puste(czy już został dopasowany-albo definiować przez none...albo po prostu definiować losowo na starcie po kolei))ciastko, mogłem namieszać z nawiasami :p
