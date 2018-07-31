@@ -1,46 +1,76 @@
 #!/usr/bin/env bash
 
-#dir:
-#d
-
-#EDITION
-#findBy:
-#x y z
-#pattern:
-#p
-#prefix:
-#px
-#value:
-#v
-#suffix:
-#sx
-
-#DELETION
-#findBy:
-#x y z
-
 
 if [[ $1 == --help ]]
 then
 	echo "ciastko"
 fi
 
+findBy() {
+	comm=''
+	for x in $@
+	do
+		comm="$comm bash ~/scripts/lsd $x |"
+	done
+}
+buildComm() {		# $commMode $pattern $value $prefix $suffix
+	if [[ ${commMode::3} == "EDI" ]]
+	then
+		
+	fi
+	if [[ ${commMode::3} == "DEL" ]]
+	then
+		comm="deletelines -l \$pattern \$file"	#deletelines -c;for x in lsd $fileNamePattern/lsd -f $pattern;do deletelines -l $pattern $file;done;deletelines -s
+	fi
+}
+
 
 file=~/Documents/massiveEditPatternFile
+alias changelines='bash ~/scripts/changeLines'
+alias deletelines='bash ~/scripts/deletelines'
 
 if [[ !(`ls | grep massiveEditPatternFile`) ]]
 then
 	echo "no patternFile"
 	echo "creating and opening patternFile"
 	#touch $file
-	echo -e "dir:\nd\n\n\nEDITION\nfindBy:\nx y z\npattern:\np\nprefix:\npx\nvalue:\nv\nsuffix:
+	echo -e "_EDITION\nfindBy:\nx y z\npattern:\np\nprefix:\npx\nvalue:\nv\nsuffix:
 sx\npattern:\np2\nprefix2:\npx2\nvalue2:\nv2\nsuffix2:\nsx2\n\nfindBy:\n...\n\n\nDELETION\nfindBy:\nx y z" > $file
 	#gedit $file &
 	exit
+else
+	file=8i
 fi
 
+readMode='readVar'
+findBy=''
+pattern=''
+prefix=''
+value=''
+suffix=''
+commMode=''
+comm=''
 if [[ true ]]
 then
 	
-
+	while read -r line
+	do
+		if [[ $readMode == "readVar" ]]
+		then
+			if [[ ${line::1} == "_" ]]
+			then
+				if [[ -z $commMode ]]
+				then
+					comm=`echo ${line:1}`
+				else
+				comm="for file in `findBy`; do
+				if [[ ${commMode::3} == "EDI" ]]; then comm="deletelines -c;$comm;deletelines -s"; fi
+				if [[ ${commMode::3} == "DEL" ]]; then comm="changelines -c;$comm;changelines -s"; fi
+				echo $comm
+				#eval $comm
+				comm=`echo ${line:1}`
+				fi
+			fi
+		fi
+	done < $file
 fi
