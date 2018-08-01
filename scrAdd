@@ -24,6 +24,7 @@ do
 		fi
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
 		echo "$call $x"
+		chmod +x ~/scripts/$x
 		amountAdded=$(($amountAdded+1))
 	fi
 done

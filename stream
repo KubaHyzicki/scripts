@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#w sumie trochę już przestarzałe, bo ogarnąłem na VB opcję wspólnego schowka...
+#ale z tą opcją z przesyłaniem plików jeszcze się może przydać bo to szwankuje jeśli robisz to na zasadzie drag&drop
 
 if [[ $1 == "--help" ]]
 then
