@@ -6,30 +6,37 @@ then
 	echo "ciastko"
 fi
 
-findBy() {
+findBy_disp() {
 	comm=''
+	ifFirst="true"
 	for x in $@
 	do
-		comm="$comm bash ~/scripts/lsd $x |"
+		if [[ !($ifFirst == "true") ]]
+		then
+			comm="$comm |"
+		else
+			ifFirst="false"
+		fi
+		#comm="${comm}bash ~/scripts/lsd $x"
 	done
 }
 buildComm() {		# $commMode $pattern $value $prefix $suffix
 	if [[ ${commMode::3} == "EDI" ]]
 	then
-		
+		comm="changelines -l \$pattern \$prefix \$value \$suffix \$file"
 	fi
 	if [[ ${commMode::3} == "DEL" ]]
 	then
-		comm="deletelines -l \$pattern \$file"	#deletelines -c;for x in lsd $fileNamePattern/lsd -f $pattern;do deletelines -l $pattern $file;done;deletelines -s
+		comm="deletelines -l \$pattern \$file"
 	fi
 }
 
-
-file=~/Documents/massiveEditPatternFile
+fileName="massiveEditPatternFile"
+file=~/Documents/$fileName
 alias changelines='bash ~/scripts/changeLines'
 alias deletelines='bash ~/scripts/deletelines'
 
-if [[ !(`ls | grep massiveEditPatternFile`) ]]
+if [[ !(`ls ~/Documents | grep $fileName`) ]]
 then
 	echo "no patternFile"
 	echo "creating and opening patternFile"
@@ -61,15 +68,15 @@ then
 			then
 				if [[ -z $commMode ]]
 				then
-					comm=`echo ${line:1}`
-				else
-				comm="for file in `findBy`; do
+					commMode=`echo ${line:1}`
+					continue
+				fi
+				comm="for file in \``findBy_disp $findBy`\`; do"
 				if [[ ${commMode::3} == "EDI" ]]; then comm="deletelines -c;$comm;deletelines -s"; fi
 				if [[ ${commMode::3} == "DEL" ]]; then comm="changelines -c;$comm;changelines -s"; fi
 				echo $comm
 				#eval $comm
-				comm=`echo ${line:1}`
-				fi
+				commMode=`echo ${line:1}`
 			fi
 		fi
 	done < $file
