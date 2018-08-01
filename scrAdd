@@ -25,6 +25,7 @@ do
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
 		echo "$call $x"
 		chmod +x ~/scripts/$x
+		echo "$x=UNKNOWN" > .status
 		amountAdded=$(($amountAdded+1))
 	fi
 done

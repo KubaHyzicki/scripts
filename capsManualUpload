@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+#formatem może być po prostu przeklejenie razem kolumny z ID i tym co akurat idzie do json'a
+
+mkdir 
+
+jsoning() {
+	jq -R -s -c 'split("\n")' < $(readlink -f $1) | jq -c '. - [""]'
+}
+for x in `cat $sourceFile`
+do
+	if [[ ${x::1} == "#" ]]
+	then
+		id=${x:1}
+		continue
+	fi
+	
+done
+
+jsoning $tempFile

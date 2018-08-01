@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+#ponownie-na razie sam pomysł, na zasadzie scst $nazwa $status
+#statusy mają 2 kategorie: działanie i feature albo nie...
+#w każdym razie mogą być statusy working,feature,notworking,idea,progress,unknown,notworkinglikeshoud...coś w ten deseń może

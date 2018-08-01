@@ -32,21 +32,21 @@ buildComm() {		# $commMode $pattern $value $prefix $suffix
 }
 
 fileName="massiveEditPatternFile"
-file=~/Documents/$fileName
 alias changelines='bash ~/scripts/changeLines'
 alias deletelines='bash ~/scripts/deletelines'
 
-if [[ !(`ls ~/Documents | grep $fileName`) ]]
+if [[ !(`ls | grep $fileName`) && !(`ls ~/Documents | grep $fileName`) ]]
 then
 	echo "no patternFile"
 	echo "creating and opening patternFile"
-	#touch $file
+	file="~/Documents/$fileName"
+	touch $file
 	echo -e "_EDITION\nfindBy:\nx y z\npattern:\np\nprefix:\npx\nvalue:\nv\nsuffix:
 sx\npattern:\np2\nprefix2:\npx2\nvalue2:\nv2\nsuffix2:\nsx2\n\nfindBy:\n...\n\n\nDELETION\nfindBy:\nx y z" > $file
 	#gedit $file &
 	exit
 else
-	file=8i
+	file="./$fileName"
 fi
 
 readMode='readVar'
@@ -57,6 +57,8 @@ value=''
 suffix=''
 commMode=''
 comm=''
+
+echo $file
 if [[ true ]]
 then
 	

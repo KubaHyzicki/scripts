@@ -5,6 +5,7 @@ then
 	echo "gives all permitions and ownership of all files in directiry
 optionally gives them also to files in subdirectories-type:	accesgain -R
 for only chmod +x on all files type(non sudo):			accesgain -x"
+	exit
 fi
 
 
