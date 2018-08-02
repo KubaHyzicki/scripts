@@ -2,19 +2,61 @@
 
 #formatem może być po prostu przeklejenie razem kolumny z ID i tym co akurat idzie do json'a
 
-mkdir 
+if [[ $1 == "--help" ]]
+then
+	echo "copy exel label to \$file and type capsmanualupload \$file, you'll get divided jsons to upload"
+	exit
+fi
 
 jsoning() {
 	jq -R -s -c 'split("\n")' < $(readlink -f $1) | jq -c '. - [""]'
 }
-for x in `cat $sourceFile`
+
+dirName='capsFiles'
+#mkdir $dirName
+
+sourceFile=$1
+#curl --user admin:admin http://autocaps.eecloud.dynamic.nsn-net.net/project/3 -v > html		#do wyłuskiwania tagu
+
+for x in `cat $sourceFile | sed 's/CAPS issue ID	/_/'`
 do
-	if [[ ${x::1} == "#" ]]
+	if [[ ${x::1} == "_" ]]			#label name
 	then
-		id=${x:1}
+		dirName=${x:1}
+		mkdir $dirName
 		continue
 	fi
-	
+	if [[ ${x::1} == "#" ]]			#tag
+	then
+		file=$dirName/${x:1}
+		touch $file
+		continue
+	fi
+	if [[ $x =~ \".+ ]]			#begining quote
+	then
+		echo ${x:1} >> $file
+		continue
+	fi
+	if [[ $x =~ .+\" ]]			#ending quote
+	then
+		echo ${x::-1} >> $file
+		if [[ $file =~ (.*_.+) ]]
+		then
+			v=`echo $file | sed 's/.*_//'`
+		else
+			mv $file "${file}_1"
+			v=2
+		fi
+		while [[ -e "${file}_${v}" ]]
+		do
+			x=$((x+1))
+		done
+		file=`echo $file | sed "s/_.+/_$v"`
+		touch $file
+		continue
+	fi
+	echo $x >> $file
 done
+#rm -rf $dirName
+#jsoning $tempFile
 
-jsoning $tempFile
