@@ -12,7 +12,6 @@ to copy file insides type:	cb -f \$fileName"
 	exit
 fi
 
-pwd
 cd ~/Documents
 temp=cb_temp
 comm='echo -n $@ > $temp'
