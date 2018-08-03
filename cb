@@ -1,20 +1,31 @@
 #!/usr/bin/env bash
 #_source
 
+#WARNING: requires xdotool installed!!!
 
 if [[ $1 == "--help" ]]
-then
-	echo "script copying input to clipboard"		#using xsel couse xclip is not working and this one requires a little more specific eval
+then							#using xsel couse xclip is not working and this one requires a little more specific eval
+	echo "script copying input to clipboard		
+WARNING: requires xdotool installed!!!
+to copy args type:		cb \$arg1 \$arg2...
+to copy file insides type:	cb -f \$fileName"
 	exit
 fi
 
+pwd
 cd ~/Documents
 temp=cb_temp
+comm='echo -n $@ > $temp'
+
+if [[ (${1::1} == "-") && (`echo $1 | grep f`) ]]
+then
+	comm='cat $OLDPWD/$2 >> $temp'
+fi
 
 if [[ true ]]
 then
 	touch $temp
-	echo -n $@ > $temp
+	eval $comm
 	xsel --clipboard < $temp
 	rm $temp
 	cd - > /dev/null
