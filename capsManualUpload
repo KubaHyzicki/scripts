@@ -16,7 +16,7 @@ dirName='capsFiles'
 #mkdir $dirName
 
 sourceFile=$1
-#curl --user admin:admin http://autocaps.eecloud.dynamic.nsn-net.net/project/3 -v > html		#do wyłuskiwania tagu
+#curl --user ciastko:ciastko http://autocaps.eecloud.dynamic.nsn-net.net/project/3 -v > html		#do wyłuskiwania tagu
 
 for x in `cat $sourceFile | sed 's/CAPS issue ID	/_/'`
 do

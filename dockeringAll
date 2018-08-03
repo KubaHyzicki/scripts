@@ -40,7 +40,7 @@ do
 		do
 			if [[ ( ${file::1} != '.' ) && ( ${file: -1} != ':' ) && (  `echo $file | grep -i $pattern` ) ]]
 			then
-				if [[ `echo $dir | grep -i "nginx"` ]]		#żeby nginx odpalał się jako ostatni(zakładam, że jest tylko jeden)
+				if [[ `echo $dir | grep -i "nginx"` ]]		#so that nginx was runned as the last(I assume that it is only one)
 				then
 					nginxContainerDir=$dir
 					continue

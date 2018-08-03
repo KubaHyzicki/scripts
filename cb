@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#_source
+
+
+if [[ $1 == "--help" ]]
+then
+	echo "script copying input to clipboard"		#using xsel couse xclip is not working and this one requires a little more specific eval
+	exit
+fi
+
+cd ~/Documents
+temp=cb_temp
+
+if [[ true ]]
+then
+	touch $temp
+	echo -n $@ > $temp
+	xsel --clipboard < $temp
+	rm $temp
+	cd - > /dev/null
+fi

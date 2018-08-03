@@ -5,7 +5,8 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo "enters the scripts directory and writes on input stream command \`gedit \$lastEditedScript &\`"
+	echo "enters the scripts directory and writes on input stream command \`gedit \$lastEditedScript &\`
+WARNING: requires xdotool installed!!!"
 	exit
 fi
 

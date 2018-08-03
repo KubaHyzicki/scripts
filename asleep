@@ -4,6 +4,7 @@ if [[ $1 == "--help" ]]
 then
 	echo "Counts down and sets machine to sleep
 type:		asleep \$minuteAmount"
+	exit
 fi
 
 if [[ -z "$1" ]]

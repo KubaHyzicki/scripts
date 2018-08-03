@@ -43,5 +43,4 @@ then
 
 fi
 
-			#1) nie działają aliasy!!!
 			#2) w razie komendy z gwiazdką grep przeszukuje też wówczas będące pod gwiazdką słowa i ostatecznie wywołuje `command *` w danej lokalizacji
