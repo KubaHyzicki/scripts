@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+
+#ogólnie jeszcze dużo pracy-core działa, ale muszę zmienić podejście do tzw funkcji głównej, bo mogą się pojawiać funcje niezależne, zrobić tak czy inaczej vir dir
+#po drugie poprawić ogólnie if __main__...bo czasem definicja main może być tuż po tym, przykład w podfolderze ciastko
+#po trzecie właśnie żeby nie omijało funkcji niezależnych-trzeba chyba zrobić tą główną vir dir jako pierwszą taką funkcję czy coś
+#a może potem main funkcji dopisać jakąś kropkę na początku żeby po prostu była pokazywana jako pierwsza/zrezygnować z main funkcji
+
+#w późniejszym etapie można dodać kolorowanie poszczególnych metod, bo pewnie będa wywoływane z kilku miejsc(lista z 20 kolorów, iterator po nich i może tabela #przypasowania albo coś w rodzaju dynamicznych zmiennych typu $funcName_colour i eval na nich by sprawdzać czy jest puste(czy już został dopasowany-albo definiować
+#przez none...albo po prostu definiować losowo na starcie po kolei)ciastko
+
+if [[ $1 == "--help" ]]
+then
+	echo "Displays input (for now python only!)files functions in a tree of dependence-which does call the other
+WARNING: requires tree installed!!!
+type:				functreedisp
+to use on specyfic file:	functreedisp \$file.py
+to set manualy main function:	functreedisp -m \$file.py \$mainF"
+	exit
+fi
+
+if [[ -z $1 ]]				#in case no file in input it searches for first founded .py
+then
+	file=`ls | grep .py | head -1`
+	if [[ -z $file ]]
+	then
+		echo "no .py file in current directory"
+		exit
+	fi
+fi
+
+if [[ ${1::1} == "-" ]]
+then
+	file=$2
+else
+	file=$1
+fi
+
+functions=''
+imports=''
+main=''
+while read -r line			#reading data(functions,imports...)
+do
+	#if [[ ${line::1} == "" ]]			#to nie działa jak myślałem-whatever
+	#then			
+	#	continue
+	#fi
+	if [[ ${line::1} == "#" ]]
+	then
+		continue
+	fi
+	if [[ ${line::6} == "import" ]]
+	then
+		imports="$imports`echo $line | sed 's/import //' | sed 's/,//g'` "
+		continue
+	fi
+	if [[ ${line::4} == "from" ]]
+	then
+		imports="$imports`echo $line | sed 's/.*import //' | sed 's/,//g'` "
+		continue
+	fi
+	if [[ ${line::4} == "def " ]]
+	then
+		functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'` "
+		continue
+	fi
+	if [[ ${line::11} == "if __name__" ]]
+	then
+		func=${line:18:-4}
+		if [[ `echo $functions | grep $func` ]]
+		then
+			continue
+		fi
+		functions="$functions$func "
+		main=$func
+	fi
+done < $file
+
+grepF=$functions
+
+if [[ (${1::1} == "-") && (`echo $1 | grep m`) ]]
+then
+	main=$3
+fi
+
+#if [[ -z $main ]]			#attempt to find main func
+#then
+#	for x in $grepF
+#	do
+#		if [[ $x == "main" ]]
+#		then
+#			main=$x
+#		fi
+#	done
+#fi
+
+func=''
+while read -r line			#reading dependence
+do
+	if [[ ${line::4} == "def " ]]
+	then
+		func=`echo $line | sed 's/def //' | sed 's/(.*//'`
+		continue
+	fi
+	for x in $grepF
+	do
+		if [[ `echo $line | grep $x` ]]
+		then
+			if [[ $func != $x ]]
+			then
+				functions=`echo $functions | sed "s/$func/$func,$x/"`
+			fi
+		fi
+	done
+done < $file
+
+if [[ -z $main ]]			#in case lack of main f/marked as main, creates main env dir "temp"
+then
+	main="temp"
+	functions="$main $functions"
+	for x in $grepF
+	do
+		functions=`echo $functions | sed "s/$main/$main,$x/"`
+	done
+fi
+
+treeing() {
+	dir=`pwd | sed 's/.*\///'`
+	functions=" $@"
+	for x in `echo $functions | sed 's/ /\n/g' | grep "^$dir.*" | sed 's/,/ /g' | sed -E "s/$dir *//"`
+	do
+		if [[ ! (`pwd | grep $x`) ]]
+		then
+			mkdir $x &> /dev/null
+		fi
+		
+	done
+	for x in `ls`
+	do
+		cd $x
+		treeing $@
+		cd ..
+	done
+}
+
+					#displaying dependence with tree by creating "tree of dirs" with functions names
+mkdir $main
+cd $main
+treeing $functions
+tree
+cd ..
+rm -rf $main
