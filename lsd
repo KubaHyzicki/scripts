@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 
-#searches for pattern in file names in dir and subdirs(usefull in reading projects)
-#with '-f' searches in files instead
-#with '-d' gives on output files in found dir
 
-###worth to try like: cat $(lsd [-f] $pattern) | less
-###		      cat $(lsd [-d] $pattern) | less
-###to see all files insides and easly search with "/" for multiple occurrence
+#!!!!!! Dodaj opcję parametr, który włącza grepowi -E(hard regex mode), prawdopodobnie będzie to wymagało kompletnego przerobienia sposobu wywoływania grepa na eval po budowaniu komendy
+
 
 if [[ $1 == "--help" ]]
 then
 	echo "script to search recursively in the current directory for files or fileses insides that matches given pattern
 type: 					lsd \$pattern_to_look_for
-or when searching files insides: 	lsd -f \$pattern_to_look_for
-exposing files if dir founded:		lsd -d \$pattern_to look_for
+or when searching files insides: 	lsd -f \$pattern
+exposing files if dir founded:		lsd -d \$pattern
+searching in in put files:		lsd -if \$pattern \$file1 \$file2...
 
 also worth to try like: 		cat \$(lsd [-f] \$pattern) | less 
 					cat \$(lsd [-d] \$pattern) | less 
 to see all files insides and easly search with \"/\" for multiple occurrence
-"
+or:					lsd -if \$inFilePattern \`lsd \$nameFilePattern\` #or other similar searches in \`\` quotes
+to research only listed in args files founded by other command"
 	exit
 fi
 if [[ -z $1 ]]
@@ -46,8 +44,24 @@ mssg_not_founded="sorry, no results"
 #$colored;echo ${dir::-1}/$x
 
 
+if [[ (${1::1} == "-") && (`echo $1 | grep [i,f][f,i]`) ]]
+then
+	shift
+	pattern=$1
+	shift
+	for file in $@
+	do
+		if [[ `cat $file | grep $pattern` ]]
+		then
+			echo $file
+		fi
+	done
+	exit
+fi
 
-if [[ ( `echo $1 | grep "\-.*f"` ) && ( ${1::1} == "-" ) ]]
+
+
+if [[ ( `echo $1 | grep "f"` ) && ( ${1::1} == "-" ) ]]
 then
 	for x in `ls -pR`
 	do  
@@ -73,7 +87,7 @@ fi
 
 
 
-if [[ ( `echo $1 | grep "\-.*d"` ) && ( ${1::1} == "-" ) ]]
+if [[ ( `echo $1 | grep "d"` ) && ( ${1::1} == "-" ) ]]
 then
 	for x in `ls -pR`
 	do 
@@ -98,7 +112,6 @@ then
 
 	exit 0
 fi
-
 
 
 if [[ ${1:0:1} != "-" ]]

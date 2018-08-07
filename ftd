@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-#ogólnie jeszcze dużo pracy-core działa, ale muszę zmienić podejście do tzw funkcji głównej, bo mogą się pojawiać funcje niezależne, zrobić tak czy inaczej vir dir
-#po drugie poprawić ogólnie if __main__...bo czasem definicja main może być tuż po tym, przykład w podfolderze ciastko
-#po trzecie właśnie żeby nie omijało funkcji niezależnych-trzeba chyba zrobić tą główną vir dir jako pierwszą taką funkcję czy coś
-#a może potem main funkcji dopisać jakąś kropkę na początku żeby po prostu była pokazywana jako pierwsza/zrezygnować z main funkcji
+#Uwaga! sypie się dla funkcji w funkcji(kto takie dziadostwa tworzy?!... -.-), while read nie zczytuje tabulacji na początku linii i szczerze nie wiem jak w takim razie to poprawić...
 
 #w późniejszym etapie można dodać kolorowanie poszczególnych metod, bo pewnie będa wywoływane z kilku miejsc(lista z 20 kolorów, iterator po nich i może tabela #przypasowania albo coś w rodzaju dynamicznych zmiennych typu $funcName_colour i eval na nich by sprawdzać czy jest puste(czy już został dopasowany-albo definiować
 #przez none...albo po prostu definiować losowo na starcie po kolei)ciastko
@@ -14,11 +11,11 @@ then
 WARNING: requires tree installed!!!
 type:				functreedisp
 to use on specyfic file:	functreedisp \$file.py
-to set manualy main function:	functreedisp -m \$file.py \$mainF"
+to display imports too:		functreedisp -i \$file.py"
 	exit
 fi
 
-if [[ -z $1 ]]				#in case no file in input it searches for first founded .py
+if [[ (-z $1) || ((${1::1} == "-") && (-z $2)) ]]				#in case no file in input it searches for first founded .py
 then
 	file=`ls | grep .py | head -1`
 	if [[ -z $file ]]
@@ -26,26 +23,29 @@ then
 		echo "no .py file in current directory"
 		exit
 	fi
+else
+	if [[ ${1::1} == "-" ]]
+	then
+		file=$2
+	else
+		file=$1
+	fi
 fi
 
-if [[ ${1::1} == "-" ]]
-then
-	file=$2
-else
-	file=$1
-fi
+
 
 functions=''
 imports=''
 main=''
 while read -r line			#reading data(functions,imports...)
 do
-	#if [[ ${line::1} == "" ]]			#to nie działa jak myślałem-whatever
-	#then			
-	#	continue
-	#fi
 	if [[ ${line::1} == "#" ]]
 	then
+		continue
+	fi
+	if [[ ${line::5} == "class" ]]
+	then
+		class=`echo $line | sed 's/class //' | sed -E 's/(\(.*)|(:)//g'`
 		continue
 	fi
 	if [[ ${line::6} == "import" ]]
@@ -60,7 +60,12 @@ do
 	fi
 	if [[ ${line::4} == "def " ]]
 	then
-		functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'` "
+		if [[ ${line::6} == "def __" ]]
+		then
+			functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'`($class) "
+		else
+			functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'` "
+		fi
 		continue
 	fi
 	if [[ ${line::11} == "if __name__" ]]
@@ -71,34 +76,27 @@ do
 			continue
 		fi
 		functions="$functions$func "
-		main=$func
 	fi
 done < $file
 
 grepF=$functions
 
-if [[ (${1::1} == "-") && (`echo $1 | grep m`) ]]
-then
-	main=$3
-fi
-
-if [[ -z $main ]]			#attempt to find main func
-then
-	for x in $grepF
-	do
-		if [[ $x == "main" ]]
-		then
-			main=$x
-		fi
-	done
-fi
-
 func=''
 while read -r line			#reading dependence
 do
+	if [[ ${line::5} == "class" ]]
+	then
+		class=`echo $line | sed 's/class //' | sed 's/(.*//g'`
+		continue
+	fi
 	if [[ ${line::4} == "def " ]]
 	then
-		func=`echo $line | sed 's/def //' | sed 's/(.*//'`
+		if [[ ${line::6} == "def __" ]]
+		then
+			func="`echo $line | sed 's/def //' | sed 's/(.*//'`($class)"
+		else
+			func=`echo $line | sed 's/def //' | sed 's/(.*//'`
+		fi
 		continue
 	fi
 	for x in $grepF
@@ -113,17 +111,20 @@ do
 	done
 done < $file
 
-if [[ -z $main ]]			#in case lack of main f/marked as main, creates main env dir "temp"
+if [[ true ]]				#setting dir
 then
-	main="temp"
+	main="${file}_ftd"
 	functions="$main $functions"
 	for x in $grepF
 	do
-		functions=`echo $functions | sed "s/$main/$main,$x/"`
+		if [[ !(`echo $functions | grep ",$x"`) ]]
+		then
+			functions=`echo $functions | sed "s/$main/$main,$x/"`
+		fi
 	done
 fi
 
-treeing() {
+treeing() {				#recursive function creating
 	dir=`pwd | sed 's/.*\///'`
 	functions=" $@"
 	for x in `echo $functions | sed 's/ /\n/g' | grep "^$dir.*" | sed 's/,/ /g' | sed -E "s/$dir *//"`
@@ -146,6 +147,15 @@ treeing() {
 mkdir $main
 cd $main
 treeing $functions
+tree | sed -E '/[0-9]+ directories, [0-9]+ files/d' | sed -E '/^$/d'
 cd ..
-tree $main
 rm -rf $main
+
+if [[ (${1::1} == "-") && (`echo $1 | grep i`) ]]
+then
+	echo "imports:"
+	for x in $imports
+	do
+		echo "-$x"
+	done
+fi
