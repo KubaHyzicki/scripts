@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 
-#!!!!!! Dodaj opcję parametr, który włącza grepowi -E(hard regex mode), prawdopodobnie będzie to wymagało kompletnego przerobienia sposobu wywoływania grepa na eval po budowaniu komendy
-
 
 if [[ $1 == "--help" ]]
 then
@@ -10,10 +8,11 @@ then
 type: 					lsd \$pattern_to_look_for
 or when searching files insides: 	lsd -f \$pattern
 exposing files if dir founded:		lsd -d \$pattern
-searching in in put files:		lsd -if \$pattern \$file1 \$file2...
+to use !THE_HARD_REGEX_MODE!:		lsd -E \$pattern
+to not ingore case:			lsd -C \$pattern
+searching in input files:		lsd -if \$pattern \$file1 \$file2...
 
-also worth to try like: 		cat \$(lsd [-f] \$pattern) | less 
-					cat \$(lsd [-d] \$pattern) | less 
+also worth to try like: 		cat \$(lsd -f/d \$pattern) | less 
 to see all files insides and easly search with \"/\" for multiple occurrence
 or:					lsd -if \$inFilePattern \`lsd \$nameFilePattern\` #or other similar searches in \`\` quotes
 to research only listed in args files founded by other command"
@@ -37,21 +36,47 @@ mssg_not_founded="sorry, no results"
 
 
 #colored=''					#żeby uwidaczniało te, które pasują idealnie...niby działa, ale jakoś coś chyba za dobrze(czasem)
-#if [[ `echo $x | grep -ix $pattern` ]]
+#if [[ `echo $x | grep -ix $pattern` ]]		#daje pod komentarz, bo zbyt często tej komendy używam i by mnie wkurzało
 #then 
 #	colored='tput setaf 1'
 #fi
 #$colored;echo ${dir::-1}/$x
 
 
+
+comm=''
+grepOp=''
+
+#grep Options:
+if [[ (${1::1} == "-") && (`echo $1 | grep "C"`) ]]
+then
+	grepOp=''
+else
+	grepOp="${grepOp}i"
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "E"`) ]]
+then
+	grepOp="${grepOp}E"
+fi
+
+if [[ !(-z $grepOp) ]]
+then
+	grepOp="-$grepOp"
+fi
+
+
+######################################################################
+#in files multiinput(pipes usage)
 if [[ (${1::1} == "-") && (`echo $1 | grep [i,f][f,i]`) ]]
 then
+	comm="cat \$file | grep $grepOp \"\$pattern\""
 	shift
 	pattern=$1
 	shift
 	for file in $@
 	do
-		if [[ `cat $file | grep $pattern` ]]
+		if [[ `eval $comm` ]]
 		then
 			echo $file
 		fi
@@ -59,10 +84,11 @@ then
 	exit
 fi
 
-
-
-if [[ ( `echo $1 | grep "f"` ) && ( ${1::1} == "-" ) ]]
+######################################################################
+#in files
+if [[ (${1::1} == "-") && (`echo $1 | grep "f"`) ]]
 then
+	comm="cat \${dir:0:-1}/\$x 2> /dev/null | grep $grepOp \"\$pattern\""
 	for x in `ls -pR`
 	do  
 	        if [[ ${x::1} == '.' ]]
@@ -70,7 +96,7 @@ then
 	                dir=$x
         		continue
 		fi
-	        if [[ `cat ${dir:0:-1}/$x 2> /dev/null | grep -i "$pattern"` ]]
+		if [[ `eval $comm` ]]
        		then
 	                echo ${dir::-1}/$x
         	        if_sth_founded=1
@@ -82,16 +108,19 @@ then
 	        echo $mssg_not_founded
 	fi
 	
-	exit 0
+	exit
 fi
 
 
+######################################################################
+comm="echo \$x | grep $grepOp \"\$pattern\""
 
+#files in dirs
 if [[ ( `echo $1 | grep "d"` ) && ( ${1::1} == "-" ) ]]
 then
 	for x in `ls -pR`
 	do 
-		if [[  ( ${x::1} == '.' ) && ( `echo $x | grep -i $pattern` ) ]]
+		if [[  ( ${x::1} == '.' ) && ( `eval $comm` ) ]]
 		then
 			dir=${x::-1}
 			for file in `ls $dir`
@@ -110,20 +139,20 @@ then
 		echo $mssg_not_founded
 	fi
 
-	exit 0
+	exit
 fi
 
-
-if [[ ${1:0:1} != "-" ]]
+#standard
+if [[ true ]]
 then
 	for x in `ls -pR`
-	do 
+	do
 		if [[ ${x::1} == '.' ]]
 		then
 			dir=${x::-1}
 			continue
 		fi
-		if [[ `echo $x | grep -i $pattern` ]]
+		if [[ `eval $comm` ]]
 		then
 			echo $dir\/$x
 			if_sth_founded=1
@@ -135,5 +164,5 @@ then
 		echo $mssg_not_founded
 	fi
 
-	exit 0
+	exit
 fi
