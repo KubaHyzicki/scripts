@@ -68,7 +68,7 @@ then
 		fi
 		if [[ ${line::1} == '/' ]]
 		then
-			patch -s $file $temp 	#(temp=patch)
+			patch -s $file $temp 			#(temp=patch)
 			echo "patched $file"
 			rm -f $temp
 			touch $temp
@@ -77,7 +77,7 @@ then
 		fi
 		echo $line >> $temp
 	done < $logs
-	patch -s $file $temp 			#(temp=patch)
+	patch -s $file $temp 					#(temp=patch)
 	echo "reverted $file"
 	rm -f $temp
 	exit
@@ -102,7 +102,7 @@ lines=`cat $file | grep $pattern`
 
 if [[ (-z $lines) && (-z addedLine) ]]
 then
-	echo "wzoru nie odnaleziono, brak reguły na nieodnalezienie"
+	echo "Pattern not founded, no rule setted in that case"
 	exit
 fi
 if [[ (-z $lines) && !(-z addedLine) ]]

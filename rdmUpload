@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#_plsDontUploadMe
+
+#zrobić tak żeby był uruchamiany podczas jakiejś czynności...tylko szczerze nie mogę się zdecydować co ma go triggerować
+#chyba najciekawiej byłoby gdyby podczas uruchamiania funkcji statusowej odpalał się ten skrypt równoleglei na początek tylko sprawdzał czy były dokonywane commity
+#i jeśli tak to robi kompletny revert samego siebie na podstawie --helpów z wszystkich metod

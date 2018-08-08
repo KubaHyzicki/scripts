@@ -9,6 +9,8 @@ type: 		h \$pattern"
 	exit
 fi
 
+#dodać opcję bez automatycznego zatwierdzania
+#dodać opcję wyświetlania pierwszych x komend pasujących do wzorca
 
 pattern=$1
 i=`history | wc -l`
@@ -28,19 +30,13 @@ done
 
 echo $comm
 $comm &> /dev/null
-if [[ $? == '127' ]]					#when a word is an alias
-then
+if [[ $? == '127' ]]					#when a command is an alias
+then			#hmm to nie uwzględnia sytuacji, gdy alias ma coś przysłaniać...no ale co? Mam je przeszukiwać za każdym pojedynczym razem?
 	al=`echo $comm | cut -d" " -f1`
 	replace=`cat ~/.bashrc | grep "alias $al=" | sed 's/alias .*=//' | sed 's/\x27//g'`
-	echo $replace
-	#replace=[$replace]
-	#echo $replace
-	#comm=`echo $comm | sed "s/$al/$replace/"`
 	comm=`echo $comm | sed "s|$al|$replace|"`
-	echo $comm	
-	#bash ~/scripts/mem ciastkownia	
+	echo $comm
 	$comm
-
 fi
 
 			#2) w razie komendy z gwiazdką grep przeszukuje też wówczas będące pod gwiazdką słowa i ostatecznie wywołuje `command *` w danej lokalizacji

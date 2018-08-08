@@ -57,7 +57,7 @@ then
 		fi
 		if [[ ${line::1} == '/' ]]
 		then
-			patch -s $file $temp 	#(temp=patch)
+			patch -s $file $temp 			#(temp=patch)
 			echo "patched $file"
 			rm -f $temp
 			touch $temp
@@ -66,7 +66,7 @@ then
 		fi
 		echo $line >> $temp
 	done < $logs
-	patch -s $file $temp 			#(temp=patch)
+	patch -s $file $temp 					#(temp=patch)
 	echo "reverted $file"
 	rm -f $temp
 	exit

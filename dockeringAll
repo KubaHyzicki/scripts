@@ -10,8 +10,8 @@ run(){											#run($dir)
 	cd $dir				
 	sudo docker build -t $container .
 	#sudo xterm `sudo docker run -it $container`			#nic nie dziaaaaałaaa...... :(
-	#sudo docker run -it $container
-	#sudo nohup bash 'sudo docker run -t $container' &
+	#sudo docker run -it $container					#chciałem żeby wszystko było w osobnych terminalach
+	#sudo nohup bash 'sudo docker run -t $container' &		#prawie wyszło-trzeba w każdym wpisywać hasło... :/
 	#sudo gnome-terminal -e "bash -c \"docker run -t $container; exec bash\""
 	#gnome-terminal -e "bash -c \"echo -n "tu_wpisz_hasło" | sudo -S docker run -t $container; exec bash\""
 	gnome-terminal -e "bash -c \"sudo -S docker run -t $container; exec bash\""

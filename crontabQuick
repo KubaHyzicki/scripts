@@ -8,7 +8,7 @@ fi
 
 if [ 0 == "$#" ]
 then
-	echo "brak argumentów"
+	echo "no args"
 	exit 1
 fi
 

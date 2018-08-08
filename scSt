@@ -1,5 +1,109 @@
 #!/usr/bin/env bash
 
-#ponownie-na razie sam pomysł, na zasadzie scst $nazwa $status
-#statusy mają 2 kategorie: działanie i feature albo nie...
-#w każdym razie mogą być statusy working,feature,notworking,idea,progress,unknown,notworkinglikeshoud...coś w ten deseń może
+if [[ $1 == "--help" ]]
+then
+	echo "script to menage other scripts statuses-there are so many of them that I decided to creare for them sth like base so that
+I would know what and where to do whether I actually do or do not want to at the moment, avalible statuses:
+INPROGRESS,IDEA,FEATURE,NOTWORKING,UNKNOWN,WORKING,SUSPENDED
+to change status type:		scSt \$file \$status
+to edit comment:		scSt -e \$file
+to display statuses:		scSt
+to not to display comments:	scSt -nc
+to display all:			scst -a"
+	exit
+fi
+
+#INPROGRESS;IDEA;FEATURE;NOTWORKING;UNKNOWN;WORKING;SUSPENDED }7 ones-display parametrized by this code
+#1111100-standard(to do) 1111111-all
+display() {		#display [-args] $code
+	cd ~/scripts
+	show() {	#show $status [$noComment]
+		comment="echo \$x | sed 's/.*_//'"
+		comment=""
+		output=''
+		if [[ !(-z $2) ]]
+		then
+			comment=""
+		fi
+		while read x
+		do
+			if [[ `echo $x | sed 's/.*=//' | sed 's/_.*//' | grep $1` ]]
+			then
+				#line=$(eval "echo *\$x | sed 's/=.*_/  -/'$noComment | sed 's/-$//'")
+				line1=$(eval "echo *\$x | sed 's/=.*//'")
+				line2="	"					#te taby...niby działają, ale rozbieżność nazw i tak sprawia, że zostaje jeden próg :/
+				line3=$(eval "$comment")
+				output="$output${line1}${line2}${line3}
+"
+			fi
+		done < .status
+		if [[ $output ]]
+		then
+			echo "			$1"
+			echo "$output"
+		fi
+	}
+
+	noComment=''
+	if [[ ${1::1} == "-" ]]
+	then
+		code=$2
+		if [[ `echo $1 | grep nc` ]]
+		then
+			noComment="1"
+		fi
+	else
+		code=$1
+	fi
+	if [[ ${code:6:1} == "1" ]]; then eval "show SUSPENDED $noComment";fi
+	if [[ ${code:5:1} == "1" ]]; then eval "show WORKING $noComment";fi
+	if [[ ${code:4:1} == "1" ]]; then eval "show UNKNOWN $noComment";fi
+	if [[ ${code:3:1} == "1" ]]; then eval "show NOTWORKING $noComment";fi
+	if [[ ${code:2:1} == "1" ]]; then eval "show FEATURE $noComment";fi
+	if [[ ${code:1:1} == "1" ]]; then eval "show IDEA $noComment";fi
+	if [[ ${code:0:1} == "1" ]]; then eval "show INPROGRESS $noComment";fi
+}
+
+
+if [[ (-z $1) || ((-z $2)&&(${1::1} == "-")) ]]
+then
+	mode="1111100"
+	if [[ `echo $1 | grep a` ]]
+	then
+		mode="1111111"
+	fi
+	
+	noComment=''
+	if [[ `echo $1 | grep nc` ]]
+	then
+		noComment="-nc"
+	fi
+	display $noComment $mode
+	exit
+fi
+
+
+if [[ ${1::1} == "-" ]]
+then
+	pattern=$2
+else
+	pattern=$1
+fi
+
+cd ~/scripts
+results=`git ls-files | grep -i $pattern | wc -l`
+if [[ $results == "0" ]]; then echo "no such scripts";exit;fi
+if [[ $results -gt 1 ]]; then echo "more then one result";exit;fi
+file=`git ls-files | grep $pattern`
+
+
+
+
+
+#hmm...i dodaj edycje komentarzy przez vima
+
+#czyli tak:
+#set status(wyrzucić błąd gdy nie ma takiego na liście dostępnych)
+#wyświetl po kolei nazwa status i komentarz inprogress->idea->feature->notworking	(olać suspended i working)
+#wyświetl wszystko(też w kolejności)
+#zmień komentarz-touch scst_scriptname; vim file;cat file | $x -> załaduj zmianę do odpowiedniego statusu

@@ -10,6 +10,10 @@ amountAdded=0
 
 for x in  `ls ~/scripts`
 do
+	if [[ `echo $x | grep -i readme` ]]
+	then
+		continue
+	fi
 	call='bash'
 	if [[ ! `cat ~/.bashrc | grep -i "alias $x="` ]]
 	then
@@ -18,6 +22,10 @@ do
 		then
 			call='source'
 		fi
+		if [[ `cat ~/scripts/$x | sed -n "2p" | sed 's/.*_//'` == "plsDontUploadMe" ]]
+		then
+			continue
+		fi
 		if [[ `cat ~/scripts/$x | sed -n "2p" | sed 's/.*_//'` == "none" ]]
 		then
 			continue
@@ -25,7 +33,7 @@ do
 		echo "alias $y='$call ~/scripts/$x'" >> ~/.bashrc
 		echo "$call $x"
 		chmod +x ~/scripts/$x
-		echo "$x=UNKNOWN" >> .status
+		echo "$x=UNKNOWN_only initial add for now" >> .status
 		amountAdded=$(($amountAdded+1))
 	fi
 done

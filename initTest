@@ -45,7 +45,7 @@ do
 	fi
 	if  [[ ${x: -3} == ".py" ]]
 	then
-		#if [[ $Vpytest !=			#ToDo-ciężkie acz nie w 100% wymagane
+		#if [[ $Vpytest !=			#ToDo-ciężkie acz nie w 100% wymagane(sprawdzanie czy pytest w ogóle jest zainstalowany)
 		pytest $x
 	fi
 done

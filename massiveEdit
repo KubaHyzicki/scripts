@@ -17,10 +17,9 @@ findBy_disp() {
 		else
 			ifFirst="false"
 		fi
-		#comm="${comm}bash ~/scripts/lsd $x"
 	done
 }
-buildComm() {		# $commMode $pattern $value $prefix $suffix
+buildComm() {
 	if [[ ${commMode::3} == "EDI" ]]
 	then
 		comm="changelines -l \$pattern \$prefix \$value \$suffix \$file"
