@@ -96,9 +96,9 @@ if [[ $results == "0" ]]; then echo "no such scripts";exit;fi
 if [[ $results -gt 1 ]]; then echo "more then one result";exit;fi
 file=`git ls-files | grep $pattern`
 
+if [[
 
-
-
+	touch ~/Documents/scSt
 
 #hmm...i dodaj edycje komentarzy przez vima
 
