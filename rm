@@ -6,15 +6,43 @@
 #dla dużych rzeczy kopiowanie może być problematyczne więc zamiast kopiować można przenosić do np. ~/.rm_backup/
 #a dokładniej:
 
+export backup=~/Documents/rm_backup
 
-
-remove (){
-	mkdir ~/.rm_backup 2> /dev/null
-	for x in `ls ~/.rm_backup`
+clean(){
+	cd $backup
+	for file in `git ls-files | sed '/\..*/d'`
 	do
-		\rm -rf $x
+		time=`stat $file | grep Modify | sed 's/Modify: //' | sed 's/:..\..*//' | sed 's/[- :]//g'`
+		echo "$file $time"
+		#if [[ `ls | wc -l` -ge 11 ]] ;then break ;fi
 	done
-	mv $1 ~/.rm_backup
+	#for x in `ls`
+	#do
+	#	\rm -rf $x
+	#done
 }
 
-#if [[ $1 ==
+remove(){
+	#args=$2
+	mv $1 $backup/$1
+}
+
+if [[ ! -d "$backup" ]]
+then
+	mkdir $backup
+fi
+clean
+args=''
+if [[ ${1::1} == "-" ]]
+then
+	args=${1:1}
+	shift
+	echo "I actually do not need any args..."
+fi
+for x in $@
+do
+	#remove $x $args
+done
+
+#dodać licznik plików w folderze backupu by usuwało najwcześniej dodane jeśli ilość w folderze przekroczy np. 10
+

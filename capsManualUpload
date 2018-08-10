@@ -13,7 +13,7 @@ jsoning() {
 }
 
 dirName='capsFiles'
-#mkdir $dirName
+mkdir $dirName
 
 sourceFile=$1
 #curl --user ciastko:ciastko http://autocaps.eecloud.dynamic.nsn-net.net/project/3 -v > html		#do wyłuskiwania tagu
@@ -57,6 +57,6 @@ do
 	fi
 	echo $x >> $file
 done
-#rm -rf $dirName
-#jsoning $tempFile
+rm -rf $dirName
+jsoning $tempFile
 
