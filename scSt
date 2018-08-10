@@ -5,11 +5,13 @@ then
 	echo "script to menage other scripts statuses-there are so many of them that I decided to creare for them sth like base so that
 I would know what and where to do whether I actually do or do not want to at the moment, avalible statuses:
 INPROGRESS,IDEA,FEATURE,NOTWORKING,UNKNOWN,WORKING,SUSPENDED
-to change status type:		scSt \$file \$status
-to edit comment:		scSt -e \$file
 to display statuses:		scSt
-to not to display comments:	scSt -nc
-to display all:			scst -a"
+to display one:			scst \$file
+to display all:			scst -a
+to not to display comments:	scSt -n
+to change status type:		scSt \$file \$status
+to edit comment:		scSt -c \$file
+to match only exact word:	scst -w \$file..."
 	exit
 fi
 
@@ -19,7 +21,6 @@ display() {		#display [-args] $code
 	cd ~/scripts
 	show() {	#show $status [$noComment]
 		comment="echo \$x | sed 's/.*_//'"
-		comment=""
 		output=''
 		if [[ !(-z $2) ]]
 		then
@@ -30,16 +31,22 @@ display() {		#display [-args] $code
 			if [[ `echo $x | sed 's/.*=//' | sed 's/_.*//' | grep $1` ]]
 			then
 				#line=$(eval "echo *\$x | sed 's/=.*_/  -/'$noComment | sed 's/-$//'")
-				line1=$(eval "echo *\$x | sed 's/=.*//'")
-				line2="	"					#te taby...niby działają, ale rozbieżność nazw i tak sprawia, że zostaje jeden próg :/
+				line1=$(eval "echo -\$x | sed 's/=.*//'")
+				chars=`echo $line1 | wc -m`
+				line2=''
+				while [[ $chars -le 22 ]]		#align tabs
+				do line2="$line2	"
+					chars=$(($chars+7))
+				done
 				line3=$(eval "$comment")
+				
 				output="$output${line1}${line2}${line3}
 "
 			fi
 		done < .status
 		if [[ $output ]]
 		then
-			echo "			$1"
+			echo "		$1"
 			echo "$output"
 		fi
 	}
@@ -48,7 +55,7 @@ display() {		#display [-args] $code
 	if [[ ${1::1} == "-" ]]
 	then
 		code=$2
-		if [[ `echo $1 | grep nc` ]]
+		if [[ `echo $1 | grep n` ]]
 		then
 			noComment="1"
 		fi
@@ -63,47 +70,83 @@ display() {		#display [-args] $code
 	if [[ ${code:1:1} == "1" ]]; then eval "show IDEA $noComment";fi
 	if [[ ${code:0:1} == "1" ]]; then eval "show INPROGRESS $noComment";fi
 }
+#################################################################
+#################################################################
+#################################################################
 
-
+mode="1111100"
+#################################################################
 if [[ (-z $1) || ((-z $2)&&(${1::1} == "-")) ]]
 then
-	mode="1111100"
 	if [[ `echo $1 | grep a` ]]
 	then
 		mode="1111111"
 	fi
 	
 	noComment=''
-	if [[ `echo $1 | grep nc` ]]
+	if [[ `echo $1 | grep n` ]]
 	then
-		noComment="-nc"
+		noComment="-n"
 	fi
 	display $noComment $mode
 	exit
 fi
 
 
+grepPattern='$pattern'
 if [[ ${1::1} == "-" ]]
 then
 	pattern=$2
+	status=$3
+	if [[ `echo $1 | grep \w` ]]
+	then
+		grepPattern='^$pattern$'
+	fi
 else
 	pattern=$1
+	status=$2
 fi
 
 cd ~/scripts
-results=`git ls-files | grep -i $pattern | wc -l`
+results=`eval "git ls-files | grep -i $grepPattern | wc -l"`
 if [[ $results == "0" ]]; then echo "no such scripts";exit;fi
 if [[ $results -gt 1 ]]; then echo "more then one result";exit;fi
-file=`git ls-files | grep $pattern`
+file=`eval "git ls-files | grep -i $grepPattern"`
+line=`cat ~/scripts/.status | grep ^$file`
+comment=`echo $line | sed 's/.*_//'`
 
-if [[
+#################################################################
+if [[ (${1::1} == "-") && (`echo $1 | grep c`) ]]
+then
+	temp=~/Documents/scSt_$file
+	touch $temp
+	echo $comment > $temp
+	vim -c 'startinsert' $temp
+	comment=`cat $temp | sed 's/\n/;/g'`
+	line=`echo $line | sed "s/_.*/_$comment/"`
+	sed -i "s/$file.*/$line/" ~/scripts/.status
+	rm $temp
+	echo "changed comment of $file"
+	exit
+fi
 
-	touch ~/Documents/scSt
+#################################################################
+if [[ -z $2 ]]
+then
+	echo $line | sed 's/_/	/'
+	exit
+fi
 
-#hmm...i dodaj edycje komentarzy przez vima
-
-#czyli tak:
-#set status(wyrzucić błąd gdy nie ma takiego na liście dostępnych)
-#wyświetl po kolei nazwa status i komentarz inprogress->idea->feature->notworking	(olać suspended i working)
-#wyświetl wszystko(też w kolejności)
-#zmień komentarz-touch scst_scriptname; vim file;cat file | $x -> załaduj zmianę do odpowiedniego statusu
+#################################################################
+if [[ true ]]
+then
+	if [[ (-z $status) ||  !(($status == "INPROGRESS") || ($status == "IDEA") || ($status == "FEATURE") || ($status == "NOTWORKING") || ($status == "UNKNOWN") || ($status == "WORKING") || ($status == "SUSPENDED")) ]]
+	then
+		echo "wrong status"
+		exit
+	fi
+	status="${status}"
+	line=`cat  ~/scripts/.status | grep $file | sed "s|$file=.*_|${file}=${status}_|"`
+	sed -i "s|$file=.*_|${file}=${status}_|" ~/scripts/.status
+	echo "status of $file setted to $status"
+fi
