@@ -6,20 +6,37 @@
 #dla dużych rzeczy kopiowanie może być problematyczne więc zamiast kopiować można przenosić do np. ~/.rm_backup/
 #a dokładniej:
 
+if [[ $1 == "--help" ]]
+then
+	
+	exit
+fi
+
 export backup=~/Documents/rm_backup
+max_backups=3
 
 clean(){
+	max=$1
 	cd $backup
-	for file in `git ls-files | sed '/\..*/d'`
+	count=0
+	echo `ls | wc -l`
+	if [[ `ls | wc -l` -le $max ]]
+	then
+		echo "no need of cleanup"
+		exit
+	fi
+	for x in `ls -t`
 	do
-		time=`stat $file | grep Modify | sed 's/Modify: //' | sed 's/:..\..*//' | sed 's/[- :]//g'`
-		echo "$file $time"
-		#if [[ `ls | wc -l` -ge 11 ]] ;then break ;fi
+		if [[ $count -ge $max ]]
+		then
+			echo "rm $x"
+			#rm -rf $x
+		else
+			echo "not $x"
+			count=$(($count+1))
+		fi
 	done
-	#for x in `ls`
-	#do
-	#	\rm -rf $x
-	#done
+	cd - &> /dev/null
 }
 
 remove(){
@@ -31,7 +48,8 @@ if [[ ! -d "$backup" ]]
 then
 	mkdir $backup
 fi
-clean
+clean $max_backups
+if false ;then 
 args=''
 if [[ ${1::1} == "-" ]]
 then
@@ -41,8 +59,8 @@ then
 fi
 for x in $@
 do
-	#remove $x $args
+	remove $x $args
 done
-
+fi
 #dodać licznik plików w folderze backupu by usuwało najwcześniej dodane jeśli ilość w folderze przekroczy np. 10
 

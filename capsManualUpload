@@ -4,7 +4,8 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo "copy exel label to \$file and type capsmanualupload \$file, you'll get divided jsons to upload"
+	echo "copy exel label to \$file and type capsmanualupload \$file, you'll get divided jsons to upload
+WARNING: requires jq and curl installed!!!"
 	exit
 fi
 
