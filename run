@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+
+#hmm w gruncie rzeczy ma przeszukiwać daną lokalizację i po kolei sprawdzać takie drzewko ewentualności=czy jest w niej plik z pierwszą linijką shebangiem, czy jest tu plik pythonowy, czy są to jedyne pliki, jeśli nie to sprawdzać ich nazwy typu main/run itp. a potem dziad ma uruchamiać to...
+#hmm ewentualnie można do tego podejść inaczej-sprawdzać historię i wywoływać ostatnie polecenie wywołujące bezpośrednio lub przez np. python3 plik w danej lokalizacji
+#po namyśle jednak lepiej żeby po prostu zbierał wszystkie parametry z którymi się wywołuje i z nimi wywoływał dany skrypt
+
+if [[ $1 == "--help" ]]
+then
+	echo "Search for file you would like to execute in current dir and runs it with given arguments
+just type:	run \$arg1 \$arg2..."
+	exit
+echo
+
+#if [[ ${1::2} == "-_" ]]
+#then
+#	echo "ewentualne czytanie parametrów"
+#	shift
+#fi
+
+#
+echo "ustalanie który plik wywołać"
+#
+
+parameters=''
+for x in $@
+do
+	parameters="$parameters $x"
+done
+
+eval "$comm $script $parameters"
+
+#ok więc zrobiłem otoczkę, teraz tyko trzeba zrobić to wykrywanie maina i ewentualne dodawanie $comm w razie np pliku pythonowego
+
+#feature-dodać sprawdzanie czy plik ma wykonywalność i w razie gdyby nie to mu ją udzielać

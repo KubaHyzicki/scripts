@@ -4,3 +4,17 @@
 #zrobić tak żeby był uruchamiany podczas jakiejś czynności...tylko szczerze nie mogę się zdecydować co ma go triggerować
 #chyba najciekawiej byłoby gdyby podczas uruchamiania funkcji statusowej odpalał się ten skrypt równoleglei na początek tylko sprawdzał czy były dokonywane commity
 #i jeśli tak to robi kompletny revert samego siebie na podstawie --helpów z wszystkich metod
+
+if [[ $1 == "--help" ]]
+then
+	echo "automaticly creates README.md file structure using --help messeges from scripts and .status file
+type:	rdmupload"
+	exit
+fi
+
+while
+do
+
+done < ~/scripts/.status
+#myślę że fajnie gdyby wykorzystywał output scSt -a(tu jeszcze dodam parametr, który to będzie wypisywał w odwrotnej kolejności) i do każdej linii dopisywał helpa
+#w formacie "Description: ..."

@@ -8,7 +8,7 @@
 
 if [[ $1 == "--help" ]]
 then
-	
+	echo "Overwrites rm command with copying dirs/files to backup folder(cleans automaticly after exceeding amount of parametrised backup files"
 	exit
 fi
 
@@ -63,4 +63,6 @@ do
 done
 fi
 #dodać licznik plików w folderze backupu by usuwało najwcześniej dodane jeśli ilość w folderze przekroczy np. 10
+#clean mógłby się wywoływać po komendzie(z zapamiętaną ilością starych obiektów do usunięcia) w oddzielonym przez & procesie dla szybszego wykonywania polecenia
+#dodać obsługę "*" i ogólnie wyrażeń regularnych do wykrywania plików do usunięcia...możliwe że da się tu wykorzystać lsd
 

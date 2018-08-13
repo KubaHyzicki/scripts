@@ -28,7 +28,7 @@ display() {		#display [-args] $code
 		fi
 		while read x
 		do
-			if [[ `echo $x | sed 's/.*=//' | sed 's/_.*//' | grep $1` ]]
+			if [[ `echo $x | sed 's/.*=/=/' | sed 's/_.*//' | grep "=$1"` ]]
 			then
 				#line=$(eval "echo *\$x | sed 's/=.*_/  -/'$noComment | sed 's/-$//'")
 				line1=$(eval "echo -\$x | sed 's/=.*//'")
@@ -64,9 +64,9 @@ display() {		#display [-args] $code
 	fi
 	if [[ ${code:6:1} == "1" ]]; then eval "show SUSPENDED $noComment";fi
 	if [[ ${code:5:1} == "1" ]]; then eval "show WORKING $noComment";fi
-	if [[ ${code:4:1} == "1" ]]; then eval "show UNKNOWN $noComment";fi
 	if [[ ${code:3:1} == "1" ]]; then eval "show NOTWORKING $noComment";fi
 	if [[ ${code:2:1} == "1" ]]; then eval "show FEATURE $noComment";fi
+	if [[ ${code:4:1} == "1" ]]; then eval "show UNKNOWN $noComment";fi
 	if [[ ${code:1:1} == "1" ]]; then eval "show IDEA $noComment";fi
 	if [[ ${code:0:1} == "1" ]]; then eval "show INPROGRESS $noComment";fi
 }
