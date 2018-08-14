@@ -11,7 +11,7 @@ exposing files if dir founded:		lsd -d \$pattern
 to use !THE_HARD_REGEX_MODE!:		lsd -E \$pattern
 to not ingore case:			lsd -C \$pattern
 searching in input files:		lsd -if \$pattern \$file1 \$file2...
-
+----------
 also worth to try like: 		cat \$(lsd -f/d \$pattern) | less 
 to see all files insides and easly search with \"/\" for multiple occurrence
 or:					lsd -if \$inFilePattern \`lsd \$nameFilePattern\` #or other similar searches in \`\` quotes

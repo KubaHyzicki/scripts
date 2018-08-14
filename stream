@@ -9,6 +9,7 @@ then
 type for output:	stream
 or:			stream -r
 type for input		stream \$args"
+	exit
 fi
 
 flag='-w'

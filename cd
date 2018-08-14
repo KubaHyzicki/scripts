@@ -3,6 +3,12 @@
 
 #hmm ogólnie nie działa w nim milion rzeczy
 
+if [[ $1 == "--help" ]]
+then
+	echo "overwrites cd and adding handler of _notFullDirNames_"
+	exit
+fi
+
 baseLoc=$PWD
 \cd $1 2> /dev/null
 #echo $?

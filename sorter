@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
 
+if [[ $1 == "--help" ]]
+then
+	echo "WARNING-Do not use in main dir!!! (lot of work after messing up)
+parameters:
+-b base(sort by days)
+-n folder names
+-p path
+-h/d/m/y date specified/range(format similar to \`date\`)"
+	exit
+fi
 
 if [[ `pwd` == "/home/`whoami`" ]]
 then
     echo "Warning: Running this script in home/user directory may cause problems"
-    exit 1
+    exit
 fi
 
 #Variables
@@ -50,7 +60,7 @@ sorterTests (){
 #Main function
 
 sorter  () {
-    if [[ ( -z "$1" ) || ( $1 == "--help" ) ]]
+    if [[ -z "$1" ]]
     then
         printf "
 WARNING-Do not use in main dir!!! (lot of work after messing up)

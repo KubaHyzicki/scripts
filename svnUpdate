@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+
+if [[ $1 == "--help" ]]
+then
+	echo "ciastko"
+	exit
+fi
+
 #w założeniu ma updatować tylko konkretne diry, subdiry w dirach, rozszerzenia, nazwy plików
 
 #sktypt bazuje na poleceniach:

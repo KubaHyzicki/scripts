@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 
-if [[ $1 == --help ]]
+if [[ $1 == "--help" ]]
 then
 	echo "ciastko"
+	exit
 fi
 
 findBy_disp() {

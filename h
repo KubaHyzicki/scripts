@@ -2,7 +2,7 @@
 #_source
 
 
-if [[ -z $1 ]]
+if [[ $1 == "--help" ]]
 then
 	echo "script to search history for last use of command that matches given pattern and executes it right away
 type: 		h \$pattern"

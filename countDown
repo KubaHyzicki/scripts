@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ $1 == "--help" ]]
+then
+	echo "simply counts down displaying numbers
+type:	countDown \$secondsAmount"
+	exit
+fi
+
 if [[ -z $1 ]]
 then
 	echo "type time in secs"

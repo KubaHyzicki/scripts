@@ -23,8 +23,7 @@ run(){											#run($dir)
 
 if [[ $1 == "--help" ]]
 then
-	echo 
-"runs all containers in dir and subdirs in separate terminals(nginx postponed to be the last if apears)"
+	echo "runs all containers in dir and subdirs in separate terminals(nginx postponed to be the last if apears)"
 	exit
 fi
 

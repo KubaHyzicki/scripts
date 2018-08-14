@@ -1,20 +1,48 @@
 #!/usr/bin/env bash
 #_plsDontUploadMe
 
-#zrobić tak żeby był uruchamiany podczas jakiejś czynności...tylko szczerze nie mogę się zdecydować co ma go triggerować
-#chyba najciekawiej byłoby gdyby podczas uruchamiania funkcji statusowej odpalał się ten skrypt równoleglei na początek tylko sprawdzał czy były dokonywane commity
-#i jeśli tak to robi kompletny revert samego siebie na podstawie --helpów z wszystkich metod
-
 if [[ $1 == "--help" ]]
 then
 	echo "automaticly creates README.md file structure using --help messeges from scripts and .status file
 type:	rdmupload"
 	exit
 fi
-
-while
+	
+cd ~/scripts
+file=~/Desktop/README.md
+echo "My bash scripts with a wide range of usabilities" > $file
+for script in `git ls-files`
 do
+	if [[ ($script =~ \..*) || ($script == "$file") ]]
+	then
+		continue
+	fi
+	status=`cat .status | grep -e "^$script=.*" | sed 's/.*=//' | sed 's/_.*//'`
+	echo >> $file;echo >> $file;echo >> $file
+	echo "$script, STATUS=$status" >> $file
+	echo >> $file
+	echo "Description:" >> $file
+	startNr=`cat -n $script | grep '"\-\-help"' | sed 's/if.*//' | sed 's/ //g'`
+	startNr=$(($startNr+1))	
+	while read -r line
+	do
+		if [[ $startNr -ge 0 ]]
+		then
+			if [[ ($startNr -le 0) && ($line =~ .*\"$) ]]; then echo $line | sed 's/echo "//' | sed 's/"$//' >> $file;break;fi
+			if [[ $startNr -le 0 ]]; then echo $line | sed 's/echo "//' >> $file;fi
+			startNr=$(($startNr-1))	
+			continue
+		fi
+		if [[ $line =~ .*\"$ ]]
+		then
+			echo $line >> $file
+			break
+		fi
+		echo $line >> $file
+	done < $script
 
-done < ~/scripts/.status
-#myślę że fajnie gdyby wykorzystywał output scSt -a(tu jeszcze dodam parametr, który to będzie wypisywał w odwrotnej kolejności) i do każdej linii dopisywał helpa
-#w formacie "Description: ..."
+	if [[ -z $help ]]
+	then
+		help="- - -"
+	fi
+done
