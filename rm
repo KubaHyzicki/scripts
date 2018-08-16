@@ -12,7 +12,7 @@ then
 	exit
 fi
 
-export backup=~/Documents/rm_backup
+export backup=~/Documents/.rm_backup
 max_backups=3
 
 clean(){
