@@ -17,15 +17,16 @@ max_backups=3
 
 clean(){
 	max=$1
+	shift
+	old_files=$@
 	cd $backup
 	count=0
-	echo `ls | wc -l`
-	if [[ `ls | wc -l` -le $max ]]
+	if [[ $# -le $max ]]
 	then
 		echo "no need of cleanup"
-		exit
+		return
 	fi
-	for x in `ls -t`
+	for x in $old_files
 	do
 		if [[ $count -ge $max ]]
 		then
@@ -40,29 +41,44 @@ clean(){
 }
 
 remove(){
-	#args=$2
-	mv $1 $backup/$1
+	#args=$2		#nie jestem pewny czy to w ogóle potrzebuje arugmentów, bo i tak chyba będzie zachowywać się tak samo,
+	mv -fu $1 $backup/$1	#niezależnie czy jest to forsowane rekursywne czy zwykłe
 }
 
 if [[ ! -d "$backup" ]]
 then
 	mkdir $backup
 fi
-clean $max_backups
-if false ;then 
+
 args=''
 if [[ ${1::1} == "-" ]]
 then
 	args=${1:1}
 	shift
-	echo "I actually do not need any args..."
+	echo "I actually do not think it needs any args..."	#add up(comment next to remove func)
 fi
+old_files=''
+for x in `ls -t $backup`
+do
+	old_files="$old_files $x"
+done
+#echo $old_files
 for x in $@
 do
-	remove $x $args
+	#checks if pattern matches file
+	if [[ (`ls | grep -wi $x`) || (false) ]]	#w tym false myślałem czy by nie dodać argumentu, który by forsował normalne wywoływanie
+	then
+		remove $x $args
+		continue
+	else
+		for x in `ls | grep -E $x`
+		do
+			remove $x $args
+		done
+	fi
 done
-fi
-#dodać licznik plików w folderze backupu by usuwało najwcześniej dodane jeśli ilość w folderze przekroczy np. 10
+
+clean $max_backups $old_files
 #clean mógłby się wywoływać po komendzie(z zapamiętaną ilością starych obiektów do usunięcia) w oddzielonym przez & procesie dla szybszego wykonywania polecenia
 #dodać obsługę "*" i ogólnie wyrażeń regularnych do wykrywania plików do usunięcia...możliwe że da się tu wykorzystać lsd
 
