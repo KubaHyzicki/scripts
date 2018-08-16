@@ -15,6 +15,8 @@ to match only exact word:	scst -w \$file..."
 	exit
 fi
 
+~/scripts/rdmUpload &
+
 #INPROGRESS;IDEA;FEATURE;NOTWORKING;UNKNOWN;WORKING;SUSPENDED }7 ones-display parametrized by this code
 #1111100-standard(to do) 1111111-all
 display() {		#display [-args] $code

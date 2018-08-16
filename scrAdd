@@ -6,6 +6,8 @@ then
 basicly if at second line of the script is \"\#_source\" it adds scripts as source"
 fi
 
+~/scripts/rdmUpload &
+
 amountAdded=0
 
 for x in  `ls ~/scripts`
