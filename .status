@@ -30,5 +30,5 @@ sorter=SUSPENDED_działająca baza, mnóstwo featurów, ale robiłem to tak dawn
 stream=FEATURE_stream plików, poza tym jego przydatność trochę maleje
 svnUpdate=FEATURE_sam update reposów...ogólnie przerobiłbym to na coś pobierające po prostu repa wedle reguł, bo samo updatowanie nie będzie mi potrzebne
 undockerAll=WORKING_
-rdmUpload=IDEA_
+rdmUpload=WORKING_
 run=UNKNOWN_only initial add for now

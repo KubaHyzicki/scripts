@@ -9,7 +9,7 @@ type:	rdmupload"
 fi
 	
 cd ~/scripts
-file=~/Desktop/README.md
+file=~/scripts/README.md
 echo "My bash scripts with a wide range of usabilities" > $file
 for script in `git ls-files`
 do
