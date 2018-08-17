@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#_plsDontUploadMe
 #_source
 
 #hmmm pomysł wyszedł z wypadku użycia rm -rf na złym folderze, a dokładnie miał to być subfolder...nic się strasznego nie stało, ale na przyszłość można zrobić rm, który oprócz usunięcia robi backup ostatnio usuniętych rzeczy

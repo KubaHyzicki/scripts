@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#_plsDontUploadMe
 
 #hmm w gruncie rzeczy ma przeszukiwać daną lokalizację i po kolei sprawdzać takie drzewko ewentualności=czy jest w niej plik z pierwszą linijką shebangiem, czy jest tu plik pythonowy, czy są to jedyne pliki, jeśli nie to sprawdzać ich nazwy typu main/run itp. a potem dziad ma uruchamiać to...
 #hmm ewentualnie można do tego podejść inaczej-sprawdzać historię i wywoływać ostatnie polecenie wywołujące bezpośrednio lub przez np. python3 plik w danej lokalizacji

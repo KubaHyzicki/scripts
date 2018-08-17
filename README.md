@@ -44,7 +44,7 @@ WARNING: requires jq and curl installed!!!"
 
 
 
-cb, STATUS=NOTWORKING
+cb, STATUS=WORKING
 
 Description:
 script copying input to clipboard
@@ -141,6 +141,15 @@ h, STATUS=FEATURE
 Description:
 script to search history for last use of command that matches given pattern and executes it right away
 type: h \$pattern"
+
+
+
+hostCon, STATUS=
+
+Description:
+Connects to first host matching pattern from list kept in .hosts
+to see all kept hosts type: hostcon
+to connect to host: hostcon \$pattern"
 
 
 
