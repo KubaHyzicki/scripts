@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 #_source
 
+#WARNING: requires xdotool installed!!!
+
 if [[ $1 == "--help" ]]
 then
 	echo "Connects to first host matching pattern from list kept in .hosts
 to see all kept hosts type:	hostcon
-to connect to host:		hostcon \$pattern"
+to connect to host:		hostcon \$pattern
+WARNING: requires xdotool installed!!!"
 	return
 fi
 
@@ -39,7 +42,9 @@ then
 				eval $comm
 			else
 				comm=`echo $comm | sed 's/ssh/ssh -tt/'`
-				eval $comm
+				#eval $comm					#z jakiegoś powodu nie ziała...
+				xdotool type "$comm"
+				clear
 			fi
 			break		#exit?
 		fi

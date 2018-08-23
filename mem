@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-low=~/Documents/mem_low
-hight=~/Documents/mem_hight
 
 if [[ $1 == "--help" ]]
 then
@@ -14,6 +12,8 @@ to operate on second like more important cache type:	mem -h"
 exit
 fi
 
+low=~/Documents/.mem_low
+hight=~/Documents/.mem_hight
 
 touch $low
 touch $hight

@@ -149,7 +149,8 @@ hostCon, STATUS=
 Description:
 Connects to first host matching pattern from list kept in .hosts
 to see all kept hosts type: hostcon
-to connect to host: hostcon \$pattern"
+to connect to host: hostcon \$pattern
+WARNING: requires xdotool installed!!!"
 
 
 
