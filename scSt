@@ -14,7 +14,7 @@ to edit comment:		scSt -c \$file
 to match only exact word:	scst -w \$file..."
 	exit
 fi
-
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!eh... przełączka -w działa na znajdowanie, ale i tak edycja wchodzi do wszystkich plików z patternem xD..uh jak to dobrze, że git ma też stare rewizje samego .status
 ~/scripts/rdmUpload &
 
 #INPROGRESS;IDEA;FEATURE;NOTWORKING;UNKNOWN;WORKING;SUSPENDED }7 ones-display parametrized by this code
@@ -126,7 +126,7 @@ then
 	vim -c 'startinsert' $temp
 	comment=`cat $temp | sed 's/\n/;/g'`
 	line=`echo $line | sed "s/_.*/_$comment/"`
-	sed -i "s/$file.*/$line/" ~/scripts/.status
+	sed -i "s/^$file=.*/$line/" ~/scripts/.status
 	rm $temp
 	echo "changed comment of $file"
 	exit

@@ -140,7 +140,8 @@ h, STATUS=FEATURE
 
 Description:
 script to search history for last use of command that matches given pattern and executes it right away
-type: h \$pattern"
+type: h \$pattern
+to see first n found commands: h -l\$n \$pattern"
 
 
 
@@ -262,7 +263,7 @@ WARNING: requires xdotool installed!!!"
 
 
 
-scSt, STATUS=WORKING
+scSt, STATUS=NOTWORKING
 
 Description:
 script to menage other scripts statuses-there are so many of them that I decided to creare for them sth like base so that
