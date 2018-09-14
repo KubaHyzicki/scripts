@@ -12,7 +12,10 @@ then
 	return
 fi
 
-#if [[ !( -z $2 ) ]] 
+#if [[ (${1::1} == "-") && ('cat $1 | grep ') ]] 
+#then
+#	return
+#fi
 #				#jakbym się chciał bawić w uruchamianie nie "po czasie", lecz "o godzinie"	
 
 if [[ true ]]

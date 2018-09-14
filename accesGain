@@ -12,8 +12,7 @@ fi
 privil='rwx'
 mode='sudo'
 rec=''
-#own='sudo chown `whoami` $x'						#whoami nie działa..możliwe, że trzeba tego używać jako #_source
-own="sudo chown `pwd | sed 's/\/home\///' | sed 's/\/.*//'` \$x"	#alternatywa z pwd nie będzie działać poza home'm
+own="sudo chown `echo $HOME | sed 's/\/home\///'` \$x"
 mess="gained acces and ownership to all files in directory"
 
 if [[ (${1::1} == "-") && (`echo $1 | grep x`) ]] 
