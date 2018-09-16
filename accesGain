@@ -41,7 +41,7 @@ then
 		eval $own 2> /dev/null
 		if [[ $? == "1" ]]
 		then
-			mess="gained acces(not own-not in home/usr dir-did not write that yet) to all files in directory"
+			mess="some errors occured it apears"
 		fi
 	done
 	echo $mess$messR
