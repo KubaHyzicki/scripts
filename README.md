@@ -243,7 +243,8 @@ run, STATUS=UNKNOWN
 
 Description:
 Search for file you would like to execute in current dir and runs it with given arguments
-just type: run \$arg1 \$arg2..."
+just type: run \$arg1 \$arg2...
+or if you want to use last used arguments: run"
 
 
 
@@ -263,7 +264,7 @@ WARNING: requires xdotool installed!!!"
 
 
 
-scSt, STATUS=NOTWORKING
+scSt, STATUS=FEATURE
 
 Description:
 script to menage other scripts statuses-there are so many of them that I decided to creare for them sth like base so that

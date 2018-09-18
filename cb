@@ -9,7 +9,13 @@ then							#using xsel couse xclip is not working and this one requires a little
 WARNING: requires xdotool installed!!!
 to copy args type:		cb \$arg1 \$arg2...
 to copy file insides type:	cb -f \$fileName"
-	exit
+	return
+fi
+
+if [[ -z $1 ]]
+then
+	echo "no args to cb"
+	return
 fi
 
 cd ~/Documents

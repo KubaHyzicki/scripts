@@ -1,9 +1,44 @@
 #!/usr/bin/env bash
+#_source
 
 if [[ $1 == "--help" ]]
 then
 	echo "adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
-basicly if at second line of the script is \"\#_source\" it adds scripts as source"
+basicly if at second line of the script is \"\#_source\" it adds scripts as source
+to use type:			scradd
+to use only in current shell:	scradd -s"
+	
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep s`)  ]]
+then
+	amountAdded=0
+	for x in `ls ./scripts`
+	do
+		if [[ `echo $x | grep -i readme` ]]
+		then
+			continue
+		fi
+		call='bash'
+		y=`echo "$x" | sed 's/\(.*\)/\L\1/'`
+		if [[ `cat ./scripts/$x | sed -n "2p" | sed 's/.*_//'` == "source" ]]
+		then
+			call='source'
+		fi
+		if [[ `cat ./scripts/$x | sed -n "2p" | sed 's/.*_//'` == "plsDontUploadMe" ]]
+		then
+			continue
+		fi
+		if [[ `cat ./scripts/$x | sed -n "2p" | sed 's/.*_//'` == "none" ]]
+		then
+			continue
+		fi
+		eval "alias $y='$call `pwd`/scripts/$x'"
+		chmod +x ./scripts/$x
+		amountAdded=$(($amountAdded+1))	
+	done
+	echo "Added $amountAdded aliases"
+	return
 fi
 
 ~/scripts/rdmUpload &

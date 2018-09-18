@@ -5,6 +5,25 @@
 #w późniejszym etapie można dodać kolorowanie poszczególnych metod, bo pewnie będa wywoływane z kilku miejsc(lista z 20 kolorów, iterator po nich i może tabela #przypasowania albo coś w rodzaju dynamicznych zmiennych typu $funcName_colour i eval na nich by sprawdzać czy jest puste(czy już został dopasowany-albo definiować
 #przez none...albo po prostu definiować losowo na starcie po kolei)ciastko
 
+
+
+
+
+
+
+
+
+
+#zarzucone-zrobię rework częściowo w pythonie, bo nie widzę nie przeciążającego system sposobu rozwiązania problemu tych wcięć!!!
+
+
+
+
+
+
+
+
+
 if [[ $1 == "--help" ]]
 then
 	echo "Displays input (for now python only!)files functions in a tree of dependence-which does call the other
@@ -83,6 +102,7 @@ grepF=$functions
 
 func=''
 while read -r line			#reading dependence
+#tuuuuu coś się zjebało...
 do
 	if [[ ${line::5} == "class" ]]
 	then
@@ -105,6 +125,9 @@ do
 		then
 			if [[ $func != $x ]]
 			then
+				echo $func
+				echo $x
+				echo "echo $functions | sed \"s/$func/$func,$x/\""
 				functions=`echo $functions | sed "s/$func/$func,$x/"`
 			fi
 		fi
