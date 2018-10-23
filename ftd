@@ -1,184 +1,40 @@
-#!/usr/bin/env bash
-
-#Uwaga! sypie się dla funkcji w funkcji(kto takie dziadostwa tworzy?!... -.-), while read nie zczytuje tabulacji na początku linii i szczerze nie wiem jak w takim razie to poprawić...
+#!/usr/bin/python3
 
 #w późniejszym etapie można dodać kolorowanie poszczególnych metod, bo pewnie będa wywoływane z kilku miejsc(lista z 20 kolorów, iterator po nich i może tabela #przypasowania albo coś w rodzaju dynamicznych zmiennych typu $funcName_colour i eval na nich by sprawdzać czy jest puste(czy już został dopasowany-albo definiować
 #przez none...albo po prostu definiować losowo na starcie po kolei)ciastko
 
-
-
-
-
-
-
-
-
-
-#zarzucone-zrobię rework częściowo w pythonie, bo nie widzę nie przeciążającego system sposobu rozwiązania problemu tych wcięć!!!
-
-
-
-
-
-
-
-
-
-if [[ $1 == "--help" ]]
-then
-	echo "Displays input (for now python only!)files functions in a tree of dependence-which does call the other
+help="""Displays input (for now python only!)files functions in a tree of dependence-which does call the other
 WARNING: requires tree installed!!!
 type:				functreedisp
 to use on specyfic file:	functreedisp \$file.py
-to display imports too:		functreedisp -i \$file.py"
-	exit
-fi
+to display imports too:		functreedisp -i \$file.py"""
 
-if [[ (-z $1) || ((${1::1} == "-") && (-z $2)) ]]				#in case no file in input it searches for first founded .py
-then
-	file=`ls | grep .py | head -1`
-	if [[ -z $file ]]
-	then
-		echo "no .py file in current directory"
-		exit
-	fi
-else
-	if [[ ${1::1} == "-" ]]
-	then
-		file=$2
-	else
-		file=$1
-	fi
-fi
+import re
+import os
+import argparse
 
 
 
-functions=''
-imports=''
-main=''
-while read -r line			#reading data(functions,imports...)
-do
-	if [[ ${line::1} == "#" ]]
-	then
-		continue
-	fi
-	if [[ ${line::5} == "class" ]]
-	then
-		class=`echo $line | sed 's/class //' | sed -E 's/(\(.*)|(:)//g'`
-		continue
-	fi
-	if [[ ${line::6} == "import" ]]
-	then
-		imports="$imports`echo $line | sed 's/import //' | sed 's/,//g'` "
-		continue
-	fi
-	if [[ ${line::4} == "from" ]]
-	then
-		imports="$imports`echo $line | sed 's/.*import //' | sed 's/,//g'` "
-		continue
-	fi
-	if [[ ${line::4} == "def " ]]
-	then
-		if [[ ${line::6} == "def __" ]]
-		then
-			functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'`($class) "
-		else
-			functions="$functions`echo $line | sed 's/def //' | sed 's/(.*//'` "
-		fi
-		continue
-	fi
-	if [[ ${line::11} == "if __name__" ]]
-	then
-		func=${line:18:-4}
-		if [[ `echo $functions | grep $func` ]]
-		then
-			continue
-		fi
-		functions="$functions$func "
-	fi
-done < $file
+class python():
+	def __init__(self,file):
+		self.file=file
 
-grepF=$functions
+	def run(self):
+		print(file)
 
-func=''
-while read -r line			#reading dependence
-#tuuuuu coś się zjebało...
-do
-	if [[ ${line::5} == "class" ]]
-	then
-		class=`echo $line | sed 's/class //' | sed 's/(.*//g'`
-		continue
-	fi
-	if [[ ${line::4} == "def " ]]
-	then
-		if [[ ${line::6} == "def __" ]]
-		then
-			func="`echo $line | sed 's/def //' | sed 's/(.*//'`($class)"
-		else
-			func=`echo $line | sed 's/def //' | sed 's/(.*//'`
-		fi
-		continue
-	fi
-	for x in $grepF
-	do
-		if [[ `echo $line | grep $x` ]]
-		then
-			if [[ $func != $x ]]
-			then
-				echo $func
-				echo $x
-				echo "echo $functions | sed \"s/$func/$func,$x/\""
-				functions=`echo $functions | sed "s/$func/$func,$x/"`
-			fi
-		fi
-	done
-done < $file
+def main(){
+	parser = argparse.ArgumentParser(description=help)
+	parser.add_argument('file')
+	args = parser.parse_args()
+	fileName = args(file)
+	file = open(fileName).readlines()
 
-if [[ true ]]				#setting dir
-then
-	main="${file}_ftd"
-	functions="$main $functions"
-	for x in $grepF
-	do
-		if [[ !(`echo $functions | grep ",$x"`) ]]
-		then
-			functions=`echo $functions | sed "s/$main/$main,$x/"`
-		fi
-	done
-fi
+	if re.match(file.splitlines()[0], '#!.*python'):
+		obj=python(file)
 
-treeing() {				#recursive function creating
-	dir=`pwd | sed 's/.*\///'`
-	functions=" $@"
-	for x in `echo $functions | sed 's/ /\n/g' | grep "^$dir.*" | sed 's/,/ /g' | sed -E "s/$dir *//"`
-	do
-		if [[ ! (`pwd | grep $x`) ]]
-		then
-			mkdir $x &> /dev/null
-		fi
-		
-	done
-	for x in `ls`
-	do
-		cd $x
-		treeing $@
-		cd ..
-	done
+	obj.run()
 }
 
-					#displaying dependence with tree by creating "tree of dirs" with functions names
-mkdir $main
-cd $main
-treeing $functions
-tree | sed -E '/[0-9]+ directories, [0-9]+ files/d' | sed -E '/^$/d'
-cd ..
-rm -rf $main
-
-if [[ (${1::1} == "-") && (`echo $1 | grep i`) ]]
-then
-	echo "imports:"
-	for x in $imports
-	do
-		echo "-$x"
-	done
-fi
+if __name__ == "__main__":
+	# execute only if run as a script
+	main()	
