@@ -23,15 +23,15 @@ comm='echo -n $@ > $temp'
 
 if [[ (${1::1} == "-") && (`echo $1 | grep f`) ]]
 then
-	comm="cat $dir/$2 > $temp"
+	comm="cat $2 > $temp"
 fi
 
-cd ~/Documents
 
 if [[ true ]]
 then
 	touch $temp
 	eval $comm
+	cd ~/Documents
 	xsel --clipboard < $temp
 	rm $temp
 	cd - > /dev/null
