@@ -7,8 +7,10 @@ then
 	echo "script to search recursively in the current directory for files or fileses insides that matches given pattern
 type: 					lsd \$pattern_to_look_for
 or when searching files insides: 	lsd -f \$pattern
-exposing files if dir founded:		lsd -d \$pattern
+to set maxdepth:			lsd -d$depth \$pattern
+to set files extension:			lsd -t \$pattern \$fileExtension
 to use !THE_HARD_REGEX_MODE!:		lsd -E \$pattern
+if doubled works for both(grep/find):	lsd -EE \$pattern	#for \"in files\" option
 to not ingore case:			lsd -C \$pattern
 searching in input files:		lsd -if \$pattern \$file1 \$file2...
 ----------
@@ -44,26 +46,7 @@ mssg_not_founded="sorry, no results"
 
 
 
-comm=''
-grepOp=''
 
-#grep Options:
-if [[ (${1::1} == "-") && (`echo $1 | grep "C"`) ]]
-then
-	grepOp=''
-else
-	grepOp="${grepOp}i"
-fi
-
-if [[ (${1::1} == "-") && (`echo $1 | grep "E"`) ]]
-then
-	grepOp="${grepOp}E"
-fi
-
-if [[ !(-z $grepOp) ]]
-then
-	grepOp="-$grepOp"
-fi
 
 
 ######################################################################
@@ -84,12 +67,67 @@ then
 	exit
 fi
 
+
+
+######################################################################
+#standard
+if_sth_founded=0
+comm=''
+findOp=''
+
+#find options:
+if [[ (${1::1} == "-") && (`echo $1 | grep "E"`) ]]
+then
+	findOpt='regex'
+else
+	findOpt='name'
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "C"`) ]]
+then
+	findOpt="$-${findOpt}"
+else
+	findOpt="$-i${findOpt}"
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "d"`) ]]
+then
+	depth=`echo $1 | sed -E 's/(.*d)([0-9]+).*/\2/'`
+	if [[ $depth ~= ^[0-9]+$ ]]
+	then
+		echo "no depth given"
+		exit
+	fi
+	depth=${depth::1}
+	findOpt="-maxdepth ${depth} ${findOpt}"
+fi
+
 ######################################################################
 #in files
 if [[ (${1::1} == "-") && (`echo $1 | grep "f"`) ]]
 then
-	comm="cat \${dir:0:-1}/\$x 2> /dev/null | grep $grepOp \"\$pattern\""
-	for x in `ls -pR`
+	grepOp=''
+	comGrep="find ."
+#grep Options:
+	if [[ (${1::1} == "-") && (`echo $1 | grep "C"`) ]]
+	then
+		grepOp="${grepOp}"
+	else
+		grepOp="${grepOp}i"
+	fi
+
+	if [[ (${1::1} == "-") && (`echo $1 | grep "E"`) ]]
+	then
+		grepOp="${grepOp}E"
+	fi
+
+	if [[ !(-z $grepOp) ]]
+	then
+		grepOp="-$grepOp"
+	fi
+
+	comm="cat \$x | grep $grepOp \"\$pattern\""
+	for x in `eval comFind`
 	do  
 	        if [[ ${x::1} == '.' ]]
        		then
@@ -111,60 +149,14 @@ then
 	exit
 fi
 
-
-######################################################################
-comm="echo \$x | grep $grepOp \"\$pattern\""
-######################################################################
-
-#files in dirs
-if [[ ( `echo $1 | grep "d"` ) && ( ${1::1} == "-" ) ]]
-then
-	for x in `ls -pR`
-	do 
-		if [[  ( ${x::1} == '.' ) && ( `eval $comm` ) ]]
-		then
-			dir=${x::-1}
-			for file in `ls $dir`
-			do
-				if_sth_founded=1
-				if [[ ( ${file::1} != '.' ) && ( ${file: -1} != ':' ) ]]
-				then
-					echo $dir/$file
-				fi
-			done
-		fi
-	done
-	
-	if [[ $if_sth_founded == 0 ]]
-	then
-		echo $mssg_not_founded
-	fi
-
-	exit
-fi
-
-######################################################################
-#standard
 if [[ true ]]
 then
-	for x in `ls -pR`
-	do
-		if [[ ${x::1} == '.' ]]
-		then
-			dir=${x::-1}
-			continue
-		fi
-		if [[ `eval $comm` ]]
-		then
-			echo $dir\/$x
-			if_sth_founded=1
-		fi
-	done
-	
-	if [[ $if_sth_founded == 0 ]]
+	comm="find ${findOpt} ${pattern}"
+	results=`eval $comm`
+	if [[ $results == '' ]]
 	then
-		echo $mssg_not_founded
+		echo ${results}
+	else
+		echo ${mssg_not_founded}
 	fi
-
-	exit
 fi
