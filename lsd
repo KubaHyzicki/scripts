@@ -10,6 +10,7 @@ or when searching files insides: 	lsd -f \$pattern
 exposing files if dir founded:		lsd -d \$pattern
 to use !THE_HARD_REGEX_MODE!:		lsd -E \$pattern
 to not ingore case:			lsd -C \$pattern
+to show hidden files too:		lsd -a \$pattern
 searching in input files:		lsd -if \$pattern \$file1 \$file2...
 ----------
 also worth to try like: 		cat \$(lsd -f/d \$pattern) | less 
@@ -58,6 +59,11 @@ fi
 if [[ (${1::1} == "-") && (`echo $1 | grep "E"`) ]]
 then
 	grepOp="${grepOp}E"
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "a"`) ]]
+then
+	grepOp="${grepOp}a"
 fi
 
 if [[ !(-z $grepOp) ]]
