@@ -32,3 +32,5 @@ svnUpdate=FEATURE_sam update reposów...ogólnie przerobiłbym to na coś pobier
 undockerAll=WORKING_
 rdmUpload=WORKING_
 run=UNKNOWN_only initial add for now
+unpackAll=WORKING_
+unpackAll=UNKNOWN_only initial add for now

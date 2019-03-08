@@ -36,14 +36,6 @@ or: \$currentlyExecutingCommand; callend"
 
 
 
-capsManualUpload, STATUS=SUSPENDED
-
-Description:
-copy exel label to \$file and type capsmanualupload \$file, you'll get divided jsons to upload
-WARNING: requires jq and curl installed!!!"
-
-
-
 cb, STATUS=WORKING
 
 Description:
@@ -181,6 +173,7 @@ or when searching files insides: lsd -f \$pattern
 exposing files if dir founded: lsd -d \$pattern
 to use !THE_HARD_REGEX_MODE!: lsd -E \$pattern
 to not ingore case: lsd -C \$pattern
+to show hidden files too: lsd -a \$pattern
 searching in input files: lsd -if \$pattern \$file1 \$file2...
 ----------
 also worth to try like: cat \$(lsd -f/d \$pattern) | less
@@ -284,7 +277,9 @@ scrAdd, STATUS=WORKING
 
 Description:
 adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
-basicly if at second line of the script is \"\#_source\" it adds scripts as source"
+basicly if at second line of the script is \"\#_source\" it adds scripts as source
+to use type: scradd
+to use only in current shell: scradd -s"
 
 
 
@@ -331,3 +326,12 @@ Description:
 stops containers: undockerall
 removes containers: undockerall -c
 removes images: undockerall -i"
+
+
+
+unpackAll, STATUS=WORKING
+UNKNOWN
+
+Description:
+script creates buckup of current dir and unpacks all archives recursively until there will be not more of them
+to use type: unpackall"
