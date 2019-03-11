@@ -3,20 +3,23 @@
 if [[ $1 == "--help" ]]
 then
 	echo "script creates buckup of current dir and unpacks all archives recursively until there will be not more of them
-to use type: 	unpackall"
+to use type: 			unpackall
+to unpack without backup: 	unpackall -b"
 	exit
 fi
 
 cont='True'
 
-mkdir backupPacked
-for x in `ls | grep -v backupPacked`;do
-	cp -R $x backupPacked
-done
+if [[ (${1::1} == "-") && ! (`echo $1 | grep b`) ]];then
+	mkdir backupPacked
+	for x in `ls | grep -v backupPacked`;do
+		cp -R $x backupPacked
+	done
+fi
 
 while [[ $cont == 'True' ]]; do
 	cont='False'
-	for file in `find . -v '^./backupPacked'`;do
+	for file in `find . | grep -v '^./backupPacked'`;do
 		dir=`echo $file | sed -E 's/\/[^\/]*$/\//g'`
 		if [[ $file =~ .*\.zip ]];then
 			echo "Unpacking ${file}"
