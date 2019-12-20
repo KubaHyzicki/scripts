@@ -36,14 +36,6 @@ or: \$currentlyExecutingCommand; callend"
 
 
 
-capsManualUpload, STATUS=SUSPENDED
-
-Description:
-copy exel label to \$file and type capsmanualupload \$file, you'll get divided jsons to upload
-WARNING: requires jq and curl installed!!!"
-
-
-
 cb, STATUS=WORKING
 
 Description:
@@ -239,12 +231,11 @@ Overwrites rm command with copying dirs/files to backup folder(cleans automaticl
 
 
 
-run, STATUS=UNKNOWN
+run, STATUS=WORKING
 
 Description:
 Search for file you would like to execute in current dir and runs it with given arguments
-just type: run \$arg1 \$arg2...
-or if you want to use last used arguments: run"
+just type: run [\$filename] [\$arg1] [\$arg2...]"
 
 
 
@@ -284,7 +275,9 @@ scrAdd, STATUS=WORKING
 
 Description:
 adds all new scripts from ~/scripts/ directory to ~/.bashrc as aliases(script name in lower cases)
-basicly if at second line of the script is \"\#_source\" it adds scripts as source"
+basicly if at second line of the script is \"\#_source\" it adds scripts as source
+to use type: scradd
+to use only in current shell: scradd -s"
 
 
 

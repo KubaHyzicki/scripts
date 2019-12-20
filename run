@@ -1,75 +1,103 @@
 #!/usr/bin/env bash
-#_plsDontUploadMe
 #_source
-
-#hmm w gruncie rzeczy ma przeszukiwać daną lokalizację i po kolei sprawdzać takie drzewko ewentualności=czy jest w niej plik z pierwszą linijką shebangiem, czy jest tu plik pythonowy, czy są to jedyne pliki, jeśli nie to sprawdzać ich nazwy typu main/run itp. a potem dziad ma uruchamiać to...
-#hmm ewentualnie można do tego podejść inaczej-sprawdzać historię i wywoływać ostatnie polecenie wywołujące bezpośrednio lub przez np. python3 plik w danej lokalizacji
-#po namyśle jednak lepiej żeby po prostu zbierał wszystkie parametry z którymi się wywołuje i z nimi wywoływał dany skrypt
 
 if [[ $1 == "--help" ]]
 then
 	echo "Search for file you would like to execute in current dir and runs it with given arguments
-just type:					run \$arg1 \$arg2...
-or if you want to use last used arguments:	run"
+just type:		run [\$filename] [\$arg1] [\$arg2...]"
 	exit
-echo
-
-parameters=''
-if [[ ${1::2} == "-_" ]]
-then
-	parameters=${1 :2}
-	shift
 fi
 
-#
-file_list=`ls | sed 's/ /\n/g'`
-script=''
+chooseFile(){
+#1st priority: run.sh , then run
+	if [[ "`ls | grep -E '^run(.sh)?$'`" ]];then 
+		echo "bash `ls | grep -E '^run(.sh)?$' | tail -1`"
+		return
+	fi
 
-for prime in primeList
-if [[ `echo primeList | grep $file` ]]			###na tym mniej więcej skończyłeś
-then
-	`echo primeList | grep $file | head -1`
-fi
-	for x in file_list
-	do
-		if [[ `cat $x | head -1` =~ (#!/usr/bin).* ]]
-		then
-			script=$x
+#2nd priority: make
+	if [[ `ls | grep -E '^Makefile'` ]];then 
+		echo "make"
+		return
+	fi
+
+#3rd priority: bash shebang
+	for file in `find . -maxdepth 1 -type f | sed -E 's/^.\///g'`;do
+		if [[ `cat ${file} | head -1 | grep -E '^#!/usr/bin/env bash$'` ]];then
+			echo "./${file}"
+			return
 		fi
 	done
-fi
-echo "ustalanie który plik wywołać"
-#
 
-#checking script executability
-temp=`ls -l | grep -w $script`
-if [[ ! ${temp::4} == "x" ]]
-then
-	chmod +x $script
-fi
+#4th priority: python shebang
+	for file in `find . -maxdepth 1 -type f | sed -E 's/^.\///g'`;do
+		if [[ `cat ${file} | head -1 | grep -E '^#!/usr/bin/python3?$'` ]];then
+			echo "./${file}"
+			return
+		fi
+	done
 
-#
-if [[ (echo $parameters | grep l) && (`ls | grep "${script}_run.log"`) ]]
-then
-	comm=`cat "${script}_run.log"`
-	eval $comm
-	exit
-fi
+#5th priority: file .sh
+	tmp=`ls | grep -E "^.*\.sh$" | head -1`
+	if [[ $tmp ]];then echo "bash ${tmp}"; return;fi
 
-parameters=''
-for x in $@
-do
-	parameters="$parameters $x"
+#6th priority: file .py (assuming python3 over python)
+	tmp=`ls | grep -E "^.*\.py$" | head -1`
+	if [[ $tmp ]];then echo "python3 ${tmp}"; return;fi
+
+#7th priority: file .bin
+	tmp=`ls | grep -E "^.*\.bin$" | head -1`
+	if [[ $tmp ]];then echo "./${tmp}"; return;fi
+
+#nothing found
+	return
+}
+
+com=''
+args=''
+runFile=''
+
+
+#collecting args
+	#->filename
+if [[ ${1} && `ls | grep -E "^${1}$"` ]]; then
+	runFile=${1}
+	shift
+fi
+	#->run args
+while [[ ${1} ]]; do
+	args="${args} ${1}"
+	shift
 done
 
-eval "$comm $script $parameters"
+#choose file and launching method
+if [[ ! ${runFile} ]];then
+	chosen=`chooseFile`
+	echo "ciastkoChosen=${chosen}"
 
-if [[ $? == "0" ]]
-then
-	echo "$comm $script $parameters" > "${script}_run.log"
+	if [[ ! ${chosen} ]]; then
+		echo "No file found"
+		exit
+	else
+		if [[ `echo ${chosen} | grep -E '(^\./)'` ]];then
+			runFile=${chosen:2}
+			com='./'
+		elif [[ `echo ${chosen} | grep -E '(^make)'` ]];then
+			runFile=''
+			com="${chosen}"
+		else
+			runFile=`echo ${chosen} | sed 's/.* //g'`
+			com=`echo ${chosen} | sed -E 's/([^ ]+)( *)([^ ]+)/\1 /g'`
+		fi
+	fi
+else 
+	com='./'
 fi
 
+#checking script executability
+if [[ (${runFile}) && (! `ls -l ${runFile} | sed -E 's/(.{9})(.)( .*)/\2/g'` == "x") ]]; then
+	chmod +x ${runFile}
+fi
 
-#ok więc zrobiłem otoczkę, teraz tyko trzeba zrobić to wykrywanie maina i ewentualne dodawanie $comm w razie np pliku pythonowego
-
-#feature-dodać sprawdzanie czy plik ma wykonywalność i w razie gdyby nie to mu ją udzielać
+#final evaluate
+eval "${com}${runFile}${args}"
