@@ -25,5 +25,14 @@ do
 	fi
 done
 
-xdotool type "gedit $fileBest &"
+shebang=`cat $fileBest | head -1`
+if [[ `echo $shebang | grep 'bash'` ]]; then
+	xdotool type "gedit $fileBest &"
+elif [[ `echo $shebang | grep 'python'` ]]; then
+	xdotool type "pycharm-community $fileBest &"
+else
+	xdotool type "gedit $fileBest &"
+fi
+
 clear
+echo "Your branch is: `git branch | grep -E '^\*'`"
