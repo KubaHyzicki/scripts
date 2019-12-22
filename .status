@@ -32,3 +32,4 @@ stream=FEATURE_stream plików, poza tym jego przydatność trochę maleje
 svnUpdate=FEATURE_sam update reposów...ogólnie przerobiłbym to na coś pobierające po prostu repa wedle reguł, bo samo updatowanie nie będzie mi potrzebne
 undockerAll=WORKING_
 rdmUpload=WORKING_
+unpackAll=WORKING_

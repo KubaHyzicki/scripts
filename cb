@@ -27,12 +27,12 @@ then
 	comm="cat $dir/$2 > $temp"
 fi
 
-cd ~/Documents
 
 if [[ true ]]
 then
 	touch $temp
 	eval $comm
+	cd ~/Documents
 	xsel --clipboard < $temp
 	rm $temp
 	cd - > /dev/null

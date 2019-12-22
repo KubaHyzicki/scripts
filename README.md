@@ -173,6 +173,7 @@ or when searching files insides: lsd -f \$pattern
 exposing files if dir founded: lsd -d \$pattern
 to use !THE_HARD_REGEX_MODE!: lsd -E \$pattern
 to not ingore case: lsd -C \$pattern
+to show hidden files too: lsd -a \$pattern
 searching in input files: lsd -if \$pattern \$file1 \$file2...
 ----------
 also worth to try like: cat \$(lsd -f/d \$pattern) | less
@@ -324,3 +325,12 @@ Description:
 stops containers: undockerall
 removes containers: undockerall -c
 removes images: undockerall -i"
+
+
+
+unpackAll, STATUS=WORKING
+UNKNOWN
+
+Description:
+script creates buckup of current dir and unpacks all archives recursively until there will be not more of them
+to use type: unpackall"
