@@ -73,7 +73,6 @@ done
 #choose file and launching method
 if [[ ! ${runFile} ]];then
 	chosen=`chooseFile`
-	echo "ciastkoChosen=${chosen}"
 
 	if [[ ! ${chosen} ]]; then
 		echo "No file found"
