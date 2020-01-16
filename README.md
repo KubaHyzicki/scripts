@@ -140,7 +140,7 @@ to see first n found commands: h -l\$n \$pattern"
 
 
 
-hostCon, STATUS=
+hostCon, STATUS=WORKING
 
 Description:
 Connects to first host matching pattern from list kept in .hosts

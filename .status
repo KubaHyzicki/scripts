@@ -13,6 +13,7 @@ docRun=WORKING_
 dockeringAll=FEATURE_uruchamianie w wielu terminalach bez konieczności wpisywania hasła w każdym
 ftd=FEATURE_w ws na domowym masz skrypt, którego w ogóle nie czyta;;;funkcja w funkcji(problem wcięć);kolorowanie funkcji
 h=FEATURE_komendy z gwiazdką;noAutoEnter;alias przysłaniający
+hostCon=WORKING_
 initFlask=WORKING_nic więcej przy obecnej wiedzy z flaska
 initTest=WORKING_nic więcej przy obecnej wiedzy z pytestu
 lsd=FEATURE_kolorowanie
