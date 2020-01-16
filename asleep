@@ -3,28 +3,73 @@
 if [[ $1 == "--help" ]]
 then
 	echo "Counts down and sets machine to sleep
-type:		asleep \$minuteAmount"
+type:					asleep \$minuteAmount
+to turn off wifi		asleep -w \$minuteAmount
+to double turn off		asleep -d \$minuteAmount
+to tripple turn off		asleep -t \$minuteAmount"
 	exit
 fi
 
+wifiOff=''
+doubleSleep=''
+trippleSleep=''
+minutes=1
+
 if [[ -z "$1" ]]
 then
-		echo "parse time(sec)"
+		echo "please parse time(sec)!"
+		exit
 fi
 
-#if [[ !( -z $2 ) ]] 
-#				#jakbym się chciał bawić w usypianie nie "po czasie", lecz "o godzinie"	
+#ToDo: usypianie nie "po czasie", lecz "o godzinie"
 
-if [[ true ]]
-then
-	time=$(($1*60))
-	for x in `eval echo {1..$time}` 
-	do				#rozważyć ewentualny podział na h m s
+if [[ (${1::1} == "-") && (`echo $1 | grep "w"`) ]]; then
+	wifiOff=1
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "d"`) ]]; then
+	doubleSleep=1
+fi
+
+if [[ (${1::1} == "-") && (`echo $1 | grep "d"`) ]]; then
+	doubleSleep=1
+	trippleSleep=1
+fi
+
+if [[ (${1::1} == "-") ]];then
+	shift
+	minutes=${1}
+else
+	minutes=${1}
+fi
+
+sleepAfter() { 	#args: minutes wifiOff
+	minutes=${1}
+	wifiOff=${2}
+	time=$((${minutes}*60))
+	for x in `eval echo {1..$time}`; do				#rozważyć ewentualny podział na h m s
 		clear
 		secs=$(($time-$x))	#Świetne narzędzie! Warto do niego jeszcze wrócić:
 		printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))	
 		#echo $(($1-$x))
 		sleep 1
 	done
+	if [[ ${wifiOff} ]]; then
+		nmcli radio wifi off
+		~/scripts/cb "nmcli radio wifi on"
+		echo "just ctrl+shift+v && enter"
+	fi
 	systemctl suspend -i
+}
+
+sleepAfter ${minutes} ${wifiOff}
+
+if [[ ${doubleSleep} ]]; then
+	sleepAfter $((60*5)) ${wifiOff}
 fi
+
+if [[ ${trippleSleep} ]]; then
+	sleepAfter $((60*5)) ${wifiOff}
+fi
+
+nmcli radio wifi on
