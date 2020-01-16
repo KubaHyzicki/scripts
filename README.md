@@ -23,7 +23,10 @@ asleep, STATUS=FEATURE
 
 Description:
 Counts down and sets machine to sleep
-type: asleep \$minuteAmount"
+type: asleep \$minuteAmount
+to turn off wifi asleep -w \$minuteAmount
+to double turn off asleep -d \$minuteAmount
+to tripple turn off asleep -t \$minuteAmount"
 
 
 
@@ -329,8 +332,8 @@ removes images: undockerall -i"
 
 
 unpackAll, STATUS=WORKING
-UNKNOWN
 
 Description:
 script creates buckup of current dir and unpacks all archives recursively until there will be not more of them
-to use type: unpackall"
+to use type: unpackall
+to unpack without backup: unpackall -b"
