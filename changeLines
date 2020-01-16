@@ -2,9 +2,9 @@
 
 if [[ $1 == "--help" ]]
 then
-	echo "script changes lines in file with given pattern
-usage: 1)finds lines by \$pattern
-2)changes in each line 
+	echo "Script changes lines in file with given pattern, usage:
+	1)finds lines by \$pattern
+	2)changes in each line 
 ...\$preffix[oldVal]\$suffix... -> ...\$prefix\$newVal\$suffix...
 It also creates a copy of last changed file, logs from
 changes(not only lastest) and allows them to use it to revert
@@ -15,8 +15,9 @@ to not overwrite log file type:		changelines -l 			...
 to just display(show) logs file:	changelines -s
 to clear logs and backup file:		changelines -c
 to add line if pattern didnt fouded	changelines -a 			... 			\$addedLine(as 7th arg)"
-	exit								#did not want "-d" for display couse of script similarity to deleteLines one and there is "-s"
+	exit
 fi
+#did not want "-d" for display couse of script similarity to deleteLines one and there is "-s"
 
 copy=~/Documents/changeLines_copy
 logs=~/Documents/changeLines_log
@@ -112,7 +113,7 @@ else
 	for line in $lines
 	do	
 		echo ciastko
-		lineUpd=`echo $line | sed "s/$prefix.*$suffix/$prefix$val$suffix/"`		
+		lineUpd=`echo $line | sed "s/$prefix.*$suffix/$prefix$val$suffix/"`
 		sed -i "s|$line|$lineUpd|" $file
 	done
 fi

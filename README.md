@@ -59,8 +59,8 @@ overwrites cd and adding handler of _notFullDirNames_
 changeLines, STATUS=WORKING
 
 Description:
-script changes lines in file with given pattern
-usage: 1)finds lines by \$pattern
+Script changes lines in file with given pattern, usage:
+1)finds lines by \$pattern
 2)changes in each line
 ...\$preffix[oldVal]\$suffix... -> ...\$prefix\$newVal\$suffix...
 It also creates a copy of last changed file, logs from

@@ -46,3 +46,6 @@ do
 		help="- - -"
 	fi
 done
+
+git diff
+xdotool type "git add .;git commit -m 'README update';git push origin master"
