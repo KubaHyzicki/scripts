@@ -65,11 +65,11 @@ sleepAfter() { 	#args: minutes wifiOff
 sleepAfter ${minutes} ${wifiOff}
 
 if [[ ${doubleSleep} ]]; then
-	sleepAfter $((60*5)) ${wifiOff}
+	sleepAfter $((5)) ${wifiOff}
 fi
 
 if [[ ${trippleSleep} ]]; then
-	sleepAfter $((60*5)) ${wifiOff}
+	sleepAfter $((5)) ${wifiOff}
 fi
 
 nmcli radio wifi on
