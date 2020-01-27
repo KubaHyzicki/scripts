@@ -61,8 +61,10 @@ runFile=''
 #collecting args
 	#->filename
 if [[ ${1} && `ls | grep -E "^${1}$"` ]]; then
-	runFile=${1}
-	shift
+	if [[ (! $1 == *.cpp) && (`ls | grep $1`) ]];then 
+		runFile=${1}
+		shift
+	fi
 fi
 	#->run args
 while [[ ${1} ]]; do
