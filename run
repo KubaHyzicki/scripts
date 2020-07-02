@@ -9,9 +9,9 @@ just type:		run [\$filename] [\$arg1] [\$arg2...]"
 fi
 
 chooseFile(){
-#1st priority: run.sh , then run
+#1st priority: run , then run.sh
 	if [[ "`ls | grep -E '^run(.sh)?$'`" ]];then 
-		echo "bash `ls | grep -E '^run(.sh)?$' | tail -1`"
+		echo "bash `ls | grep -E '^run(.sh)?$' | head -1`"
 		return
 	fi
 
